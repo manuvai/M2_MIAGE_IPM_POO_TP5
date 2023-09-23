@@ -6,7 +6,6 @@
 package res.model;
 
 /**
- *
  * @author david
  */
 public enum TypeCase {

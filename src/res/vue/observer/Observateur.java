@@ -6,7 +6,6 @@
 package res.vue.observer;
 
 /**
- *
  * @author david
  */
 public interface Observateur {

@@ -9,15 +9,18 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 
 /**
- *
  * @author david
  */
 public class RessourcesImages {
-    public static Image CHAT =new ImageIcon ("img/chat.png").getImage();
-    public static Image SOURIS =new ImageIcon ("img/souris.png").getImage();
-    public static Image FLECHE =new ImageIcon ("img/fleche.png").getImage();
-    public static Image CHEMIN =new ImageIcon ("img/chemin.jpg").getImage();
-    public static Image MUR =new ImageIcon ("img/mur.jpg").getImage();
-    public static Image IN =new ImageIcon ("img/in.png").getImage();
-    public static Image OUT =new ImageIcon ("img/out.png").getImage();
+    public static final Image CHAT = new ImageIcon("img/chat.png").getImage();
+    public static final Image SOURIS = new ImageIcon("img/souris.png").getImage();
+    public static final Image FLECHE = new ImageIcon("img/fleche.png").getImage();
+    public static final Image CHEMIN = new ImageIcon("img/chemin.jpg").getImage();
+    public static final Image MUR = new ImageIcon("img/mur.jpg").getImage();
+    public static final Image IN = new ImageIcon("img/in.png").getImage();
+    public static final Image OUT = new ImageIcon("img/out.png").getImage();
+
+    private RessourcesImages() {
+
+    }
 }

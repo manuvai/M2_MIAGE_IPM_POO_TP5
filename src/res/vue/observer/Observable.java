@@ -6,11 +6,12 @@
 package res.vue.observer;
 
 /**
- *
  * @author david
  */
 public interface Observable {
     public abstract void addObservateur(Observateur o);
+
     public abstract void removeObservateur(Observateur o);
+
     public abstract void demandeMiseAjourVue();
 }

@@ -6,11 +6,12 @@
 package res.model;
 
 import java.util.ArrayList;
+
+import res.model.animal.Animal;
 import res.vue.observer.Observable;
 import res.vue.observer.Observateur;
 
 /**
- *
  * @author david
  */
 public abstract class AbstractModel implements Observable {
@@ -19,36 +20,45 @@ public abstract class AbstractModel implements Observable {
     public AbstractModel() {
         observateurs = new ArrayList<>();
     }
-    
-    
+
+
     public abstract void faireSeDeplacerLesAnimaux();
-    
+
     public abstract TypeCase getTypeCase(int x, int y);
-    public abstract void setTypeCase(int x, int y,TypeCase tc);
+
+    public abstract void setTypeCase(int x, int y, TypeCase tc);
+
     public abstract Animal getAnimalPlusFort(int x, int y);
+
     public abstract int getLargeur();
+
     public abstract int getHauteur();
+
     public abstract int getNbSourisIn();
+
     public abstract int getNbSourisOut();
+
     public abstract int getNbFlecheUtilisee();
+
     public abstract int getNbFlecheMax();
+
     public abstract boolean partieTerminer();
 
     @Override
-    public void demandeMiseAjourVue(){
-        for(Observateur o : observateurs){
+    public void demandeMiseAjourVue() {
+        for (Observateur o : observateurs) {
             o.update();
         }
     }
 
     @Override
-    public void removeObservateur(Observateur o){
+    public void removeObservateur(Observateur o) {
         observateurs.remove(o);
     }
 
     @Override
-    public void addObservateur(Observateur o){
+    public void addObservateur(Observateur o) {
         observateurs.add(o);
     }
-    
+
 }

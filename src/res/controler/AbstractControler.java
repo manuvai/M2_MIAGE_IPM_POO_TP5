@@ -8,16 +8,16 @@ package res.controler;
 import res.model.AbstractModel;
 
 /**
- *
  * @author david
  */
 public abstract class AbstractControler {
     protected AbstractModel model;
-    
-    public AbstractControler(AbstractModel model){
+
+    public AbstractControler(AbstractModel model) {
         this.model = model;
     }
-    
+
     public abstract void cliqueSur(int x, int y);
+
     public abstract void calculerStepSuivant();
 }
