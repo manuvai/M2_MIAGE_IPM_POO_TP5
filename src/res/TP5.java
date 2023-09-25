@@ -9,6 +9,7 @@ import res.controler.AbstractControler;
 import res.controler.Controler;
 import res.model.AbstractModel;
 import res.model.Model;
+import res.model.TypeCase;
 import res.vue.Vue;
 
 /**
@@ -21,12 +22,18 @@ public class TP5 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        AbstractModel model = new Model(); //à instancier
-        AbstractControler controler = new Controler(model); //à instancier
+        Model model = new Model();
+
+        model.initialiserCarte("assets/map.txt");
+        model.initialiserAnimaux("assets/animals.csv");
+
+        AbstractControler controler = new Controler(model);
+
         Vue v = new Vue(model, controler);
         model.addObservateur(v);
         v.setVisible(true);
-        while(!model.partieTerminer()){
+
+        while (!model.partieTerminer()){
             controler.calculerStepSuivant();
         }
     }

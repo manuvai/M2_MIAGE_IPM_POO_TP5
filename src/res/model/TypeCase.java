@@ -16,5 +16,5 @@ public enum TypeCase {
     FLECHE_HAUT,
     FLECHE_DROITE,
     FLECHE_BAS,
-    FLECHE_GAUCHE
+    FLECHE_GAUCHE,
 }

@@ -2,9 +2,31 @@
 
 !includeurl https://raw.githubusercontent.com/manuvai/plantuml-utils/master/class_diagram_utils.puml
 
+!function point($n1, $n2, $sign, $text = "")
+    
+    !if ($texte == "")
+        !return $n1 + $sign + $n2
+    !else
+        !return $n1 + $sign + $n2 + " : " + $text
+    !endif
+    
+!endfunction
+
+!function implements($node1, $node2)
+    !return point($node1, $node2, "..|>", "<<implements>>")
+!endfunction
+
+<style>
+
+.initial {
+    BackgroundColor LightBlue
+}
+
+</style>
+
 package res {
     package controler {
-        abstract AbstractControler {
+        abstract AbstractControler <<initial>> {
             +construct("AbstractControler(AbstractModel)")
             +{abstract} void("cliqueSur(int, int)")
             +{abstract} void("calculerStepSuivant()")
@@ -18,11 +40,11 @@ package res {
     package vue {
 
         package observer {
-            interface Observateur {
+            interface Observateur <<initial>> {
                 +{abstract} void("update()")
             }
 
-            interface Observable {
+            interface Observable <<initial>> {
                 +{abstract} void("addObservateur(Observateur)")
                 +{abstract} void("removeObservateur(Observateur)")
                 +{abstract} void("demandeMiseAjourVue()")
@@ -31,7 +53,7 @@ package res {
 
         }
         
-        class MouseListener <<extends MouseAdapter>> {
+        class MouseListener <<extends MouseAdapter>> <<initial>> {
             int(x0)
             int(y0)
             int(x1)
@@ -51,7 +73,7 @@ package res {
             +int("numeroCaseLigne(int)")
         }
 
-        class PanelJeu <<extends javax.swing.JPanel>> {
+        class PanelJeu <<extends javax.swing.JPanel>> <<initial>> {
             -member(Graphics, cg)
 
             +construct("PanelJeu()")
@@ -69,7 +91,7 @@ package res {
             +void("drawCaseFlecheDroite(int, int, int)")
         }
 
-        class RessourcesImages {
+        class RessourcesImages <<initial>> {
             +{static} member(Image, CHAT)
             +{static} member(Image, SOURIS)
             +{static} member(Image, FLECHE)
@@ -80,7 +102,7 @@ package res {
             -construct("RessourcesImages()")
         }
 
-        class Vue implements Observateur {
+        class Vue <<initial>> {
             +construct("Vue(AbstractModel, AbstractControler)")
             +void("dessinerJeu()")
         }
@@ -91,7 +113,20 @@ package res {
         package animal {
 
             class Animal implements Observateur {
+                -int(x)
+                -int(y)
+                -int(xDir)
+                -int(yDir)
 
+                +construct("Animal(int, int)")
+                +int("getX()")
+                +void("setX(int)")
+                +int("getY()")
+                +void("setY(int)")
+                +int("getxDir()")
+                +void("setxDir(int)")
+                +int("getyDir()")
+                +void("setyDir(int)")
             }
 
             class Souris {
@@ -104,7 +139,7 @@ package res {
             
         }
 
-        abstract AbstractModel {
+        abstract AbstractModel <<initial>> {
             +construct("AbstractModel()")
             +{abstract} void("faireSeDeplacerLesAnimaux()")
             +{abstract} member(TypeCase, "getTypeCase(int, int)")
@@ -125,7 +160,7 @@ package res {
 
         }
 
-        enum TypeCase {
+        enum TypeCase <<initial>> {
             MUR
             IN
             OUT
@@ -138,18 +173,18 @@ package res {
     }
 }
 
-
-
-
 extends(Chat, Animal, up)
 extends(Souris, Animal, up)
+
+implements(Vue, Observateur)
 
 AbstractControler -right- AbstractModel
 AbstractModel o-- Observateur : list(Observateur, observateurs)
 
 MouseListener -- AbstractControler
 PanelJeu -- Vue : member(Vue, fenetre)
-Model -- Souris : list(Souris, souris)
+Model -- TypeCase : member("Map<Integer, Map[Integer, TypeCase]>", cases)
+Model -- Animal : list(Animal, animaux)
 
 Vue -- AbstractModel
 Vue -- MouseListener

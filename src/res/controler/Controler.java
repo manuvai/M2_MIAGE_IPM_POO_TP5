@@ -14,6 +14,8 @@ public class Controler extends AbstractControler {
 
     @Override
     public void calculerStepSuivant() {
-
+        // TODO Essayer de mettre des sleep pour éviter le rafraîchissement trop rapide
+        
+        model.faireSeDeplacerLesAnimaux();
     }
 }
