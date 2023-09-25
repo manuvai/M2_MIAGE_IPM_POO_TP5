@@ -9,7 +9,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 /**
- * @author david
+ * @author manuvai.rehua@gmail.com
  */
 public class PanelJeu extends javax.swing.JPanel {
     private Vue fenetre;

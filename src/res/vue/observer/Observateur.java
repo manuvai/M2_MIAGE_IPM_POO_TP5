@@ -6,8 +6,8 @@
 package res.vue.observer;
 
 /**
- * @author david
+ * @author manuvai.rehua@gmail.com
  */
 public interface Observateur {
-    public abstract void update();
+    public void update();
 }

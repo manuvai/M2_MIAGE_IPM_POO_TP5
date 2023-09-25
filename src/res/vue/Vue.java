@@ -8,14 +8,16 @@ package res.vue;
 import res.controler.AbstractControler;
 import res.model.AbstractModel;
 import res.model.TypeCase;
+import res.model.animal.Animal;
 import res.model.animal.Chat;
 import res.model.animal.Souris;
 import res.vue.observer.Observateur;
 
+import java.awt.*;
 import java.util.Objects;
 
 /**
- * @author david
+ * @author manuvai.rehua@gmail.com
  */
 public class Vue extends javax.swing.JFrame implements Observateur {
 
@@ -42,22 +44,11 @@ public class Vue extends javax.swing.JFrame implements Observateur {
         labelNbSourisOut.setText("nombre souris sauvées : " + model.getNbSourisOut());
         labelNbFleches.setText("Flèches : " + model.getNbFlecheUtilisee() + "/" + model.getNbFlecheMax());
 
-        int x;
-        int y;
-        int cote;
+        Rectangle rectangle = initialiserRectangleJeu();
 
-        int h = panelJeu.getWidth();
-        int l = panelJeu.getHeight();
-
-        if (l / model.getLargeur() > h / model.getHauteur()) {
-            cote = h / model.getHauteur();
-            y = (int) ((l - (cote * model.getLargeur())) / 2.f);
-            x = 0;
-        } else {
-            cote = l / model.getLargeur();
-            x = (int) ((h - (cote * model.getHauteur())) / 2.f);
-            y = 0;
-        }
+        int x = (int) rectangle.getX();
+        int y = (int) rectangle.getY();
+        int cote = (int) rectangle.getHeight();
 
         mouseListener.updateDimension(
                 x,
@@ -73,7 +64,6 @@ public class Vue extends javax.swing.JFrame implements Observateur {
                 TypeCase typeCase = model.getTypeCase(xP, yP);
 
                 if (Objects.nonNull(typeCase)) {
-
                     switch (typeCase) {
                         case IN:
                             panelJeu.drawCaseIn(xCase, yCase, cote);
@@ -108,18 +98,44 @@ public class Vue extends javax.swing.JFrame implements Observateur {
                             break;
 
                     }
+
                 }
 
-                if (model.getAnimalPlusFort(xP, yP) instanceof Souris) {
-                    panelJeu.drawSouris(x + xP * cote, y + yP * cote, cote);
+                Animal animalPlusFort = model.getAnimalPlusFort(xP, yP);
+                
+                if (animalPlusFort instanceof Souris) {
+                    panelJeu.drawSouris(xCase, yCase, cote);
 
-                } else if (model.getAnimalPlusFort(xP, yP) instanceof Chat) {
-                    panelJeu.drawChat(x + xP * cote, y + yP * cote, cote);
+                } else if (animalPlusFort instanceof Chat) {
+                    panelJeu.drawChat(xCase, yCase, cote);
 
                 }
 
             }
         }
+    }
+
+    private Rectangle initialiserRectangleJeu() {
+        int x;
+        int y;
+        int cote;
+
+        int h = panelJeu.getWidth();
+        int l = panelJeu.getHeight();
+
+        if (l / model.getLargeur() > h / model.getHauteur()) {
+            cote = h / model.getHauteur();
+            x = 0;
+            y = (int) ((l - (cote * model.getLargeur())) / 2.f);
+
+        } else {
+            cote = l / model.getLargeur();
+            x = (int) ((h - (cote * model.getHauteur())) / 2.f);
+            y = 0;
+
+        }
+
+        return new Rectangle(x, y, cote, cote);
     }
 
 

@@ -1,0 +1,158 @@
+@startuml
+
+!includeurl https://raw.githubusercontent.com/manuvai/plantuml-utils/master/class_diagram_utils.puml
+
+package res {
+    package controler {
+        abstract AbstractControler {
+            +construct("AbstractControler(AbstractModel)")
+            +{abstract} void("cliqueSur(int, int)")
+            +{abstract} void("calculerStepSuivant()")
+        }
+
+        class Controler extends AbstractControler {
+
+        }
+    }
+
+    package vue {
+
+        package observer {
+            interface Observateur {
+                +{abstract} void("update()")
+            }
+
+            interface Observable {
+                +{abstract} void("addObservateur(Observateur)")
+                +{abstract} void("removeObservateur(Observateur)")
+                +{abstract} void("demandeMiseAjourVue()")
+
+            }
+
+        }
+        
+        class MouseListener <<extends MouseAdapter>> {
+            int(x0)
+            int(y0)
+            int(x1)
+            int(y1)
+            int(cote)
+            int(xDepart)
+            int(yDepart)
+            int(xArrive)
+            int(yArrive)
+            boolean(deuxiemeClic)
+
+            +construct("MouseListener(AbstractControler)")
+            +void("mousePressed(MouseEvent)")
+            +void("updateDimension(int, int, int, int, int)")
+            +boolean("alinterieur(int, int)")
+            +int("numeroCaseColonne(int)")
+            +int("numeroCaseLigne(int)")
+        }
+
+        class PanelJeu <<extends javax.swing.JPanel>> {
+            -member(Graphics, cg)
+
+            +construct("PanelJeu()")
+            +construct("PanelJeu(Vue)")
+            +void("paintComponent(Graphics)")
+            +void("drawSouris(int, int, int)")
+            +void("drawChat(int, int, int)")
+            +void("drawCaseIn(int, int, int)")
+            +void("drawCaseOut(int, int, int)")
+            +void("drawCaseMur(int, int, int)")
+            +void("drawCaseChemin(int, int, int)")
+            +void("drawCaseFlecheHaut(int, int, int)")
+            +void("drawCaseFlecheBas(int, int, int)")
+            +void("drawCaseFlecheGauche(int, int, int)")
+            +void("drawCaseFlecheDroite(int, int, int)")
+        }
+
+        class RessourcesImages {
+            +{static} member(Image, CHAT)
+            +{static} member(Image, SOURIS)
+            +{static} member(Image, FLECHE)
+            +{static} member(Image, CHEMIN)
+            +{static} member(Image, MUR)
+            +{static} member(Image, IN)
+            +{static} member(Image, OUT)
+            -construct("RessourcesImages()")
+        }
+
+        class Vue implements Observateur {
+            +construct("Vue(AbstractModel, AbstractControler)")
+            +void("dessinerJeu()")
+        }
+    }
+
+    package model {
+
+        package animal {
+
+            class Animal implements Observateur {
+
+            }
+
+            class Souris {
+
+            }
+
+            class Chat {
+
+            }
+            
+        }
+
+        abstract AbstractModel {
+            +construct("AbstractModel()")
+            +{abstract} void("faireSeDeplacerLesAnimaux()")
+            +{abstract} member(TypeCase, "getTypeCase(int, int)")
+            +{abstract} member(Animal, "getTypeCase(int, int)")
+            +{abstract} int("getLargeur()")
+            +{abstract} int("getHauteur()")
+            +{abstract} int("getNbSourisIn()")
+            +{abstract} int("getNbSourisOut()")
+            +{abstract} int("getNbFlecheUtilisee()")
+            +{abstract} int("getNbFlecheMax()")
+            +{abstract} boolean("partieTerminer()")
+            +void("demandeMiseAjourVue()")
+            +void("removeObservateur(Observateur)")
+            +void("addObservateur(Observateur)")
+        }
+
+        class Model extends AbstractModel {
+
+        }
+
+        enum TypeCase {
+            MUR
+            IN
+            OUT
+            CHEMIN
+            FLECHE_HAUT
+            FLECHE_DROITE
+            FLECHE_BAS
+            FLECHE_GAUCHE
+        }
+    }
+}
+
+
+
+
+extends(Chat, Animal, up)
+extends(Souris, Animal, up)
+
+AbstractControler -right- AbstractModel
+AbstractModel o-- Observateur : list(Observateur, observateurs)
+
+MouseListener -- AbstractControler
+PanelJeu -- Vue : member(Vue, fenetre)
+Model -- Souris : list(Souris, souris)
+
+Vue -- AbstractModel
+Vue -- MouseListener
+Vue -- AbstractControler
+
+@enduml

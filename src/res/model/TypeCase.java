@@ -6,7 +6,7 @@
 package res.model;
 
 /**
- * @author david
+ * @author manuvai.rehua@gmail.com
  */
 public enum TypeCase {
     MUR,

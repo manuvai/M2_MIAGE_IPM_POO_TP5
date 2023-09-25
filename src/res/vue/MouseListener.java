@@ -6,7 +6,7 @@
 package res.vue;
 
 /**
- * @author david
+ * @author manuvai.rehua@gmail.com
  */
 
 import java.awt.event.MouseAdapter;

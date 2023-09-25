@@ -1,0 +1,28 @@
+@startuml
+
+hide footbox
+
+participant Jeu as app
+participant Animal as animal
+
+[--> app ++ : update()
+    loop Pour chaque animaux du plateau
+        app -> animal ++ : update()
+            alt caseActuelle == ARROW
+                animal -> animal : souris.changeDir(arrow)
+            else caseActuelle.contains(Chat)
+                animal -> animal : souris.mourir()
+            end
+
+            alt futureCase == MUR
+                animal -> animal : souris.demiTour()
+            end
+        animal -> animal : souris.update(xDir, yDir)
+        return
+
+
+    end loop
+return
+
+
+@enduml

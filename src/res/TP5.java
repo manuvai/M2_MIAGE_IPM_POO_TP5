@@ -13,7 +13,7 @@ import res.vue.Vue;
 
 /**
  *
- * @author david
+ * @author manuvai.rehua@gmail.com
  */
 public class TP5 {
 

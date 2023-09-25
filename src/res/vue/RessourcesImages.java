@@ -9,7 +9,7 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 
 /**
- * @author david
+ * @author manuvai.rehua@gmail.com
  */
 public class RessourcesImages {
     public static final Image CHAT = new ImageIcon("img/chat.png").getImage();

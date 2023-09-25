@@ -6,7 +6,7 @@
 package res.vue.observer;
 
 /**
- * @author david
+ * @author manuvai.rehua@gmail.com
  */
 public interface Observable {
     public abstract void addObservateur(Observateur o);

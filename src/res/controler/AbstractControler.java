@@ -8,7 +8,7 @@ package res.controler;
 import res.model.AbstractModel;
 
 /**
- * @author david
+ * @author manuvai.rehua@gmail.com
  */
 public abstract class AbstractControler {
     protected AbstractModel model;

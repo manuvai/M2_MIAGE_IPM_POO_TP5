@@ -12,7 +12,7 @@ import res.vue.observer.Observable;
 import res.vue.observer.Observateur;
 
 /**
- * @author david
+ * @author manuvai.rehua@gmail.com
  */
 public abstract class AbstractModel implements Observable {
     private ArrayList<Observateur> observateurs;
