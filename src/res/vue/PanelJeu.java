@@ -10,6 +10,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Objects;
 
 /**
  * @author manuvai.rehua@gmail.com
@@ -29,7 +30,7 @@ public class PanelJeu extends javax.swing.JPanel {
     public void paintComponent(Graphics g) {
         cg = g;
         super.paintComponent(cg);
-        if (fenetre != null) {
+        if (Objects.nonNull(fenetre) && Objects.nonNull(cg)) {
             fenetre.dessinerJeu();
         }
     }

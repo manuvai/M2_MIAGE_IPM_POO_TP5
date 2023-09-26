@@ -34,7 +34,9 @@ public class TP5 {
         v.setVisible(true);
 
         while (!model.partieTerminer()){
+
             controler.calculerStepSuivant();
+            v.dessinerJeu();
         }
     }
     

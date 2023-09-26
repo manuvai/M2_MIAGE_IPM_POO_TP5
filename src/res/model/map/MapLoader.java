@@ -37,8 +37,8 @@ public class MapLoader {
             if (Objects.nonNull(animalClazz)) {
                 try {
                     Constructor<?> constructor = animalClazz.getConstructor(int.class, int.class);
-                    int x = Integer.parseInt(records.get(i).get(1));
-                    int y = Integer.parseInt(records.get(i).get(2));
+                    int x = Integer.parseInt(records.get(i).get(2));
+                    int y = Integer.parseInt(records.get(i).get(1));
                     Animal animal = (Animal) constructor.newInstance(new Object[] {x, y});
 
                     animal.setxDir(Integer.parseInt(records.get(i).get(3)));
