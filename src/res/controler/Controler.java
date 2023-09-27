@@ -30,13 +30,7 @@ public class Controler extends AbstractControler {
             return;
         }
 
-        List<TypeCase> typeCaseList = Stream.of(TypeCase.FLECHE_HAUT, TypeCase.FLECHE_DROITE, TypeCase.FLECHE_BAS, TypeCase.FLECHE_GAUCHE, TypeCase.CHEMIN)
-                .collect(Collectors.toList());
-
-        int nextIndex = !typeCaseList.contains(typeCase)
-                ? 0
-                : (typeCaseList.indexOf(typeCase) + 1) % typeCaseList.size();
-        TypeCase nextTypeCase = typeCaseList.get(nextIndex);
+        TypeCase nextTypeCase = getNextTypeCase(typeCase);
 
         model.setTypeCase(x, y, nextTypeCase);
     }
@@ -71,5 +65,17 @@ public class Controler extends AbstractControler {
         else if(diff < period && ++delays >= DELAYS_BEFORE_YIELD){
             Thread.yield();
         }
+    }
+
+    private static TypeCase getNextTypeCase(TypeCase typeCase) {
+        List<TypeCase> typeCaseList = Stream.of(TypeCase.FLECHE_HAUT, TypeCase.FLECHE_DROITE,
+                        TypeCase.FLECHE_BAS, TypeCase.FLECHE_GAUCHE, TypeCase.CHEMIN)
+                .collect(Collectors.toList());
+
+        int nextIndex = !typeCaseList.contains(typeCase)
+                ? 0
+                : (typeCaseList.indexOf(typeCase) + 1) % typeCaseList.size();
+
+        return typeCaseList.get(nextIndex);
     }
 }
