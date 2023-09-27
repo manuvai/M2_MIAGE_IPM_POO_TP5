@@ -3,7 +3,6 @@ package res.model;
 import res.model.animal.Animal;
 import res.model.animal.Chat;
 import res.model.animal.Souris;
-import res.model.map.MapAdapter;
 import res.model.map.MapLoader;
 
 import java.util.*;
@@ -20,9 +19,11 @@ public class Model extends AbstractModel {
     public void initialiserAnimaux(String nomFichier) {
         List<Animal> animauxCarte = mapLoader.getCharacters(nomFichier);
 
-        if (Objects.nonNull(animauxCarte) && !animauxCarte.isEmpty()) {
-            animaux = animauxCarte;
+        if (Objects.isNull(animauxCarte) || animauxCarte.isEmpty()) {
+            return;
         }
+
+        animaux = animauxCarte;
     }
 
     public void initialiserCarte(String nomFichier) {
@@ -76,8 +77,6 @@ public class Model extends AbstractModel {
             animal.setX(animal.getX() + animal.getxDir());
             animal.setY(animal.getY() + animal.getyDir());
 
-            System.out.println(animal.getClass());
-            System.out.println(animal.getX() + "-" + animal.getY());
         }
     }
 
@@ -166,12 +165,24 @@ public class Model extends AbstractModel {
 
     @Override
     public int getNbFlecheUtilisee() {
-        return 0;
+
+        int count = 0;
+
+        for (Map<Integer, TypeCase> ligne : cases.values()) {
+            count += ligne.values()
+                    .stream()
+                    .filter(TypeCase::isArrow)
+                    .count();
+        }
+
+        return count;
     }
 
     @Override
     public int getNbFlecheMax() {
-        return 0;
+        // TODO Déterminer un nombre de flèches maximal
+
+        return 2;
     }
 
     @Override

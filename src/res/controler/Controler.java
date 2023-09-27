@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Controler extends AbstractControler {
-    private long period = 256_000_000;//ms -> nano // sleeping time
+    private long period = 256_000_000; //ms -> nano // sleeping time
     private static final int DELAYS_BEFORE_YIELD = 10;
     public Controler(AbstractModel model) {
         super(model);
@@ -16,9 +16,17 @@ public class Controler extends AbstractControler {
 
     @Override
     public void cliqueSur(int x, int y) {
+
         TypeCase typeCase = model.getTypeCase(x, y);
 
         boolean isChemin = TypeCase.CHEMIN.equals(typeCase);
+
+        if (isChemin &&
+                model.getNbFlecheUtilisee() >= model.getNbFlecheMax()
+        ) {
+            return;
+        }
+
         boolean isLeftArrow = TypeCase.FLECHE_GAUCHE.equals(typeCase);
         boolean isUpArrow = TypeCase.FLECHE_HAUT.equals(typeCase);
         boolean isRightArrow = TypeCase.FLECHE_DROITE.equals(typeCase);

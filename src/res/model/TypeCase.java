@@ -5,6 +5,8 @@
  */
 package res.model;
 
+import java.util.Objects;
+
 /**
  * @author manuvai.rehua@gmail.com
  */
@@ -16,5 +18,15 @@ public enum TypeCase {
     FLECHE_HAUT,
     FLECHE_DROITE,
     FLECHE_BAS,
-    FLECHE_GAUCHE,
+    FLECHE_GAUCHE;
+
+    public static boolean isArrow(TypeCase typeCase) {
+        return Objects.nonNull(typeCase) && (
+                FLECHE_HAUT.equals(typeCase) ||
+                FLECHE_DROITE.equals(typeCase) ||
+                FLECHE_BAS.equals(typeCase) ||
+                FLECHE_GAUCHE.equals(typeCase)
+                );
+
+    }
 }
