@@ -7,9 +7,7 @@ package res;
 
 import res.controler.AbstractControler;
 import res.controler.Controler;
-import res.model.AbstractModel;
 import res.model.Model;
-import res.model.TypeCase;
 import res.vue.Vue;
 
 /**

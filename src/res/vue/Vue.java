@@ -28,20 +28,20 @@ public class Vue extends javax.swing.JFrame implements Observateur {
     /**
      * Creates new form
      *
-     * @param model
-     * @param controler
+     * @param inModel
+     * @param inControler
      */
-    public Vue(AbstractModel model, AbstractControler controler) {
-        this.model = model;
-        this.controler = controler;
+    public Vue(AbstractModel inModel, AbstractControler inControler) {
+        model = inModel;
+        controler = inControler;
         initComponents();
-        this.mouseListener = new MouseListener(controler);
-        this.panelJeu.addMouseListener(this.mouseListener);
+        mouseListener = new MouseListener(controler);
+        panelJeu.addMouseListener(this.mouseListener);
     }
 
     public void dessinerJeu() {
-        labelNbSourisIN.setText("nombre souris cachées : " + model.getNbSourisIn());
-        labelNbSourisOut.setText("nombre souris sauvées : " + model.getNbSourisOut());
+        labelNbSourisIN.setText("Nombre souris cachées : " + model.getNbSourisIn());
+        labelNbSourisOut.setText("Nombre souris sauvées : " + model.getNbSourisOut());
         labelNbFleches.setText("Flèches : " + model.getNbFlecheUtilisee() + "/" + model.getNbFlecheMax());
 
         Rectangle rectangle = initialiserRectangleJeu();
@@ -102,7 +102,7 @@ public class Vue extends javax.swing.JFrame implements Observateur {
                 }
 
                 Animal animalPlusFort = model.getAnimalPlusFort(xP, yP);
-                
+
                 if (animalPlusFort instanceof Souris) {
                     panelJeu.drawSouris(xCase, yCase, cote);
 
