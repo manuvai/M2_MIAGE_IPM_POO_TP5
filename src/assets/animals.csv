@@ -1,3 +1,4 @@
 animal_type;x_pos;y_pos;x_dir;y_dir
-c;1;1;1;0
-m;2;2;1;0
+c;5;3;0;1
+c;2;5;1;0
+m;3;2;1;0

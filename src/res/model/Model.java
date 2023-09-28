@@ -23,7 +23,17 @@ public class Model extends AbstractModel {
             return;
         }
 
-        animaux = animauxCarte;
+        setAnimaux(animauxCarte);
+    }
+
+    private void setAnimaux(List<Animal> inAnimaux) {
+        if (Objects.isNull(inAnimaux)) {
+            return;
+        }
+
+        inAnimaux.forEach(this::addObservateur);
+
+        animaux = inAnimaux;
     }
 
     public void initialiserCarte(String nomFichier) {
@@ -74,8 +84,6 @@ public class Model extends AbstractModel {
                 inverserSens(animal);
             }
 
-            animal.setX(animal.getX() + animal.getxDir());
-            animal.setY(animal.getY() + animal.getyDir());
 
         }
     }

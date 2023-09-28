@@ -33,7 +33,11 @@ package res {
         }
 
         class Controler extends AbstractControler {
-
+            -member(long, period)
+            -{static} int(DELAYS_BEFORE_YIED)
+            +void("cliqueSur(int, int)")
+            +void("calculerStepSuivant()")
+            +{static} member(TypeCase, "getNextTypeCase(TypeCase)")
         }
     }
 
@@ -137,6 +141,21 @@ package res {
 
             }
             
+        }
+
+        package map {
+            interface AnimalTypeString {
+                
+            }
+            interface MapTileTypeString {
+
+            }
+            class MapAdapter {
+
+            }
+            class MapLoader {
+                
+            }
         }
 
         abstract AbstractModel <<initial>> {
