@@ -12,6 +12,10 @@ public class Model extends AbstractModel {
 
     private List<Animal> animaux = new ArrayList<>();
 
+    private List<Souris> sourisSorties = new ArrayList<>();
+
+    private List<Souris> sourisDansTrou = new ArrayList<>();
+
     private MapLoader mapLoader = new MapLoader();
 
     private Map<Integer, Map<Integer, TypeCase>> cases = new HashMap<>();
@@ -24,16 +28,6 @@ public class Model extends AbstractModel {
         }
 
         setAnimaux(animauxCarte);
-    }
-
-    private void setAnimaux(List<Animal> inAnimaux) {
-        if (Objects.isNull(inAnimaux)) {
-            return;
-        }
-
-        inAnimaux.forEach(this::addObservateur);
-
-        animaux = inAnimaux;
     }
 
     public void initialiserCarte(String nomFichier) {
@@ -52,8 +46,15 @@ public class Model extends AbstractModel {
 
     @Override
     public void faireSeDeplacerLesAnimaux() {
+
+        List<Animal> animauxTues = new ArrayList<>();
+
         for (Animal animal : animaux) {
             TypeCase typeCase = getTypeCase(animal.getX(), animal.getY());
+
+            if (verifierSiMourir(animal)) {
+                animauxTues.add(animal);
+            }
 
             if (animal instanceof Souris) {
                 if (TypeCase.FLECHE_HAUT.equals(typeCase)) {
@@ -86,17 +87,24 @@ public class Model extends AbstractModel {
 
 
         }
+
+        animauxTues.forEach(this::tuerAnimal);
+    }
+
+    private void tuerAnimal(Animal animal) {
+        animaux.remove(animal);
+    }
+
+    private boolean verifierSiMourir(Animal inAnimal) {
+        Animal animalPlusFort = getAnimalPlusFort(inAnimal.getX(), inAnimal.getY());
+
+        return inAnimal instanceof Souris && animalPlusFort instanceof Chat;
     }
 
     public TypeCase getFutureCase(Animal animal) {
         return Objects.isNull(animal)
                 ? null
                 : getTypeCase(animal.getX() + animal.getxDir(), animal.getY() + animal.getyDir());
-    }
-
-    private void inverserSens(Animal animal) {
-        animal.setxDir(-animal.getxDir());
-        animal.setyDir(-animal.getyDir());
     }
 
     @Override
@@ -141,12 +149,6 @@ public class Model extends AbstractModel {
                 : animaux.get(indexBest);
     }
 
-    private List<Animal> getAnimauxDansCase(int x, int y) {
-        return animaux.stream()
-                .filter(animal -> animal.getX() == x && animal.getY() == y)
-                .collect(Collectors.toList());
-    }
-
     @Override
     public int getLargeur() {
         Map<Integer, TypeCase> premiereLigne = cases.get(0);
@@ -168,7 +170,7 @@ public class Model extends AbstractModel {
 
     @Override
     public int getNbSourisOut() {
-        return 0;
+        return sourisSorties.size();
     }
 
     @Override
@@ -197,4 +199,52 @@ public class Model extends AbstractModel {
     public boolean partieTerminer() {
         return false;
     }
+
+    private void sortirSouris(Souris souris) {
+        int indexSouris = animaux.indexOf(souris);
+
+        if (indexSouris >= 0) {
+            sourisSorties.add((Souris) animaux.remove(indexSouris));
+
+        }
+    }
+
+    private void faireEntrerNouvelleSouris() {
+        if (sourisDansTrou.isEmpty()) {
+            return;
+        }
+
+        ajouterSourisDansMap(sourisDansTrou.get(0));
+    }
+
+    private List<Animal> getAnimauxDansCase(int x, int y) {
+        return animaux.stream()
+                .filter(animal -> animal.getX() == x && animal.getY() == y)
+                .collect(Collectors.toList());
+    }
+
+    private void inverserSens(Animal animal) {
+        animal.setxDir(-animal.getxDir());
+        animal.setyDir(-animal.getyDir());
+    }
+
+    private void setAnimaux(List<Animal> inAnimaux) {
+        if (Objects.isNull(inAnimaux)) {
+            return;
+        }
+
+        inAnimaux.forEach(this::addObservateur);
+
+        animaux = inAnimaux;
+    }
+
+    private void ajouterSourisDansMap(Souris souris) {
+        if (Objects.isNull(souris)) {
+            return;
+        }
+
+        addObservateur(souris);
+        animaux.add(souris);
+    }
+
 }
