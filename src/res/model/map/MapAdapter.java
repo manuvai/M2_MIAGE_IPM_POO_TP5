@@ -30,15 +30,6 @@ public class MapAdapter {
         correspondingAnimal.put(AnimalTypeString.SOURIS, Souris.class);
     }
 
-    public static MapAdapter getInstance() {
-
-        if (Objects.isNull(instance)) {
-            instance = new MapAdapter();
-        }
-
-        return instance;
-    }
-
     public static Class<? extends Animal> toAnimal(String animalString) {
         return Objects.isNull(animalString)
                 ? null
@@ -50,6 +41,15 @@ public class MapAdapter {
         return Objects.isNull(tileString)
                 ? null
                 : getInstance().correspondingMapTile.get(tileString);
+    }
+
+    public static MapAdapter getInstance() {
+
+        if (Objects.isNull(instance)) {
+            instance = new MapAdapter();
+        }
+
+        return instance;
     }
 
 }

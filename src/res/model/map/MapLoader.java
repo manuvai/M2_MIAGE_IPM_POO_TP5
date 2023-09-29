@@ -19,7 +19,8 @@ import java.util.stream.Collectors;
 
 public class MapLoader {
 
-    public static final String SPLIT_STRING = ";";
+    public static final String SEMI_COLON_SPLIT_STRING = ";";
+    public static final String EMPTY_SPLIT_STRING = "";
 
     public List<List<TypeCase>> getMapTiles(String file) {
 
@@ -34,7 +35,7 @@ public class MapLoader {
 
         List<String> mapStrings = extractMapString(file);
 
-        List<List<String>> records = extractTileString(mapStrings, SPLIT_STRING);
+        List<List<String>> records = extractTileString(mapStrings, SEMI_COLON_SPLIT_STRING);
 
         List<Animal> animaux = new ArrayList<>();
 
@@ -77,10 +78,23 @@ public class MapLoader {
         return mapStrings;
     }
 
+    /**
+     * Extrait une liste de lignes de liste de caractères
+     *
+     * @param mapStrings
+     * @return
+     */
     private List<List<String>> extractTileString(List<String> mapStrings) {
-        return extractTileString(mapStrings, "");
+        return extractTileString(mapStrings, EMPTY_SPLIT_STRING);
     }
 
+    /**
+     * Extrait une liste de lignes de liste de caractères séparés par un caractère passé en paramètre
+     *
+     * @param mapStrings
+     * @param splitString
+     * @return
+     */
     private List<List<String>> extractTileString(List<String> mapStrings, String splitString) {
         return mapStrings.stream()
                 .map(line -> Arrays.asList(line.split(splitString)))
@@ -93,9 +107,7 @@ public class MapLoader {
      * @param tilesString
      * @return
      */
-    private List<List<TypeCase>> constructTilesFromString(
-            List<List<String>> tilesString
-    ) {
+    private List<List<TypeCase>> constructTilesFromString(List<List<String>> tilesString) {
         List<List<TypeCase>> mapTiles = new ArrayList<>();
 
         tilesString.forEach(line -> {
