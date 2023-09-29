@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Controler extends AbstractControler {
-    private static long PERIOD = 512_000_000L; //ms -> nano // sleeping time
+    private static final long PERIOD = 512_000_000L; //ms -> nano // sleeping time
     private static final int DELAYS_BEFORE_YIELD = 10;
     public Controler(AbstractModel model) {
         super(model);
