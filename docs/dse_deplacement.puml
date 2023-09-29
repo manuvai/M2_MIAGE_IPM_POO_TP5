@@ -1,0 +1,13 @@
+@startuml
+
+hide footbox
+
+participant "Model" as app
+participant "Souris" as souris
+participant "Map" as map
+
+activate app
+    app -> app : Déterminer si la souris peut sortir
+deactivate app
+
+@enduml

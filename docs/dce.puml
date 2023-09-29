@@ -145,16 +145,35 @@ package res {
 
         package map {
             interface AnimalTypeString {
-                
+                string(CHAT)
+                string(SOURIS)
             }
             interface MapTileTypeString {
-
+                string(IN)
+                string(OUT)
+                string(MUR)
+                string(CHEMIN)
+                string(FLECHE_HAUT)
+                string(FLECHE_DROITE)
+                string(FLECHE_BAS)
+                string(FLECHE_GAUCHE)
             }
             class MapAdapter {
+                member("Map<String, TypeCase>", correspondingMapTile)
+                member("Map<String, Class<? extends Animal>>", correspondingAnimal)
 
+                +member("Class<? extends Animal>", "toAnimal(String)")
+                +member("TypeCase", "toMapTile(String)")
+                +member(MapAdapter, "getInstance()")
             }
             class MapLoader {
-                
+                +list("List<TypeCase>", "getMapTiles(String)")
+                +list("Animal", "getCharacters(String)")
+                -list("String", "extractMapString(String)")
+                -list("List<String>", "extractTileString(List<String>)")
+                -list("List<String>", "extractTileString(List<String>, String)")
+                -list("List<TypeCase>", "constructTilesFromString(List<List[String]>)")
+                -list("String", "readFromInputStream(InputStream)")
             }
         }
 
@@ -208,5 +227,7 @@ Model -- Animal : list(Animal, animaux)
 Vue -- AbstractModel
 Vue -- MouseListener
 Vue -- AbstractControler
+
+remove vue
 
 @enduml

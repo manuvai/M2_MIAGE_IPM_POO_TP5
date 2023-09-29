@@ -3,6 +3,7 @@ package res.controler;
 import res.model.AbstractModel;
 import res.model.Model;
 import res.model.TypeCase;
+import res.model.exceptions.ThreadConcurrentException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -74,7 +75,7 @@ public class Controler extends AbstractControler {
             try {
                 Thread.sleep(sleepTime / 1_000_000L);
             } catch (InterruptedException ex) {
-                throw new RuntimeException(ex);
+                throw new ThreadConcurrentException();
             }
         }
         // Accumulate the amount of delays and eventually yeild

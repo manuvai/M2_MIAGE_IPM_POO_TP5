@@ -2,7 +2,7 @@ package res.model.animal;
 
 import res.vue.observer.Observateur;
 
-public class Animal implements Observateur {
+public class Animal {
     protected int x;
     protected int y;
     protected int xDir;
@@ -45,8 +45,7 @@ public class Animal implements Observateur {
         this.yDir = yDir;
     }
 
-    @Override
-    public void update() {
+    public void move() {
         setX(getX() + getxDir());
         setY(getY() + getyDir());
     }

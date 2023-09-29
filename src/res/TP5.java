@@ -34,7 +34,6 @@ public class TP5 {
         while (!model.partieTerminer()) {
 
             controler.calculerStepSuivant();
-            v.dessinerJeu();
 
             // TODO Demander c'est quoi des souris cachées
             //  Celles dans le trou

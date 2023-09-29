@@ -16,6 +16,8 @@ public class Model extends AbstractModel {
     
     private static final int NB_SOURIS_IN = 10;
 
+    private static final int DELAY_TO_ENTER = 5;
+
     private List<Animal> animaux = new ArrayList<>();
 
     private List<Souris> sourisSorties = new ArrayList<>();
@@ -25,6 +27,8 @@ public class Model extends AbstractModel {
     private MapLoader mapLoader = new MapLoader();
 
     private Carte carte = new Carte();
+
+    private Date dateDerniereEntree;
 
     public void initialiserAnimaux(String nomFichier) {
         List<Animal> animauxCarte = mapLoader.getCharacters(nomFichier);
@@ -95,10 +99,24 @@ public class Model extends AbstractModel {
                 inverserSens(animal);
             }
 
+            animal.move();
         }
+
+        calculerSiFaireEntrerSouris();
 
         animauxTues.forEach(this::tuerAnimal);
         souriesSorties.forEach(this::sortirSouris);
+    }
+
+    private void calculerSiFaireEntrerSouris() {
+
+        boolean isTimeToEnter = Objects.isNull(dateDerniereEntree) ||
+                (new Date()).getTime() - dateDerniereEntree.getTime() >= DELAY_TO_ENTER * 1000;
+
+        if (isTimeToEnter) {
+            faireEntrerNouvelleSouris();
+            dateDerniereEntree = new Date();
+        }
     }
 
     public TypeCase getFutureCase(Animal animal) {
@@ -187,7 +205,7 @@ public class Model extends AbstractModel {
 
     @Override
     public boolean partieTerminer() {
-        return false;
+        return getNbSourisIn() == 0;
     }
     private List<Animal> getAnimauxDansCase(int x, int y) {
         return animaux.stream()
@@ -196,8 +214,6 @@ public class Model extends AbstractModel {
     }
 
     private void tuerAnimal(Animal animal) {
-
-        removeObservateur(animal);
 
         animaux.remove(animal);
     }
@@ -218,8 +234,6 @@ public class Model extends AbstractModel {
             return;
         }
 
-        inAnimaux.forEach(this::addObservateur);
-
         animaux = inAnimaux;
     }
 
@@ -228,7 +242,6 @@ public class Model extends AbstractModel {
             return;
         }
 
-        addObservateur(souris);
         animaux.add(souris);
     }
 
@@ -236,7 +249,6 @@ public class Model extends AbstractModel {
         int indexSouris = animaux.indexOf(souris);
 
         if (indexSouris >= 0) {
-            removeObservateur(animaux.get(indexSouris));
 
             sourisSorties.add((Souris) animaux.remove(indexSouris));
 
