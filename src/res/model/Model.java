@@ -3,12 +3,17 @@ package res.model;
 import res.model.animal.Animal;
 import res.model.animal.Chat;
 import res.model.animal.Souris;
+import res.model.exceptions.NoEntryFoundException;
 import res.model.map.MapLoader;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class Model extends AbstractModel {
+    
+    private static final int NB_SOURIS_IN = 10;
 
     private List<Animal> animaux = new ArrayList<>();
 
@@ -28,6 +33,7 @@ public class Model extends AbstractModel {
         }
 
         setAnimaux(animauxCarte);
+        initialiserSourisDansTrous();
     }
 
     public void initialiserCarte(String nomFichier) {
@@ -48,6 +54,7 @@ public class Model extends AbstractModel {
     public void faireSeDeplacerLesAnimaux() {
 
         List<Animal> animauxTues = new ArrayList<>();
+        List<Souris> souriesSorties = new ArrayList<>();
 
         for (Animal animal : animaux) {
             TypeCase typeCase = getTypeCase(animal.getX(), animal.getY());
@@ -76,6 +83,8 @@ public class Model extends AbstractModel {
                     animal.setxDir(-1);
                     animal.setyDir(0);
 
+                } else if (TypeCase.OUT.equals(typeCase)) {
+                    souriesSorties.add((Souris) animal);
                 }
             }
 
@@ -85,20 +94,10 @@ public class Model extends AbstractModel {
                 inverserSens(animal);
             }
 
-
         }
 
         animauxTues.forEach(this::tuerAnimal);
-    }
-
-    private void tuerAnimal(Animal animal) {
-        animaux.remove(animal);
-    }
-
-    private boolean verifierSiMourir(Animal inAnimal) {
-        Animal animalPlusFort = getAnimalPlusFort(inAnimal.getX(), inAnimal.getY());
-
-        return inAnimal instanceof Souris && animalPlusFort instanceof Chat;
+        souriesSorties.forEach(this::sortirSouris);
     }
 
     public TypeCase getFutureCase(Animal animal) {
@@ -149,6 +148,14 @@ public class Model extends AbstractModel {
                 : animaux.get(indexBest);
     }
 
+    public void faireEntrerNouvelleSouris() {
+        if (sourisDansTrou.isEmpty()) {
+            return;
+        }
+
+        ajouterSourisDansMap(sourisDansTrou.remove(0));
+    }
+
     @Override
     public int getLargeur() {
         Map<Integer, TypeCase> premiereLigne = cases.get(0);
@@ -165,7 +172,7 @@ public class Model extends AbstractModel {
 
     @Override
     public int getNbSourisIn() {
-        return 0;
+        return sourisDansTrou.size();
     }
 
     @Override
@@ -199,28 +206,23 @@ public class Model extends AbstractModel {
     public boolean partieTerminer() {
         return false;
     }
-
-    private void sortirSouris(Souris souris) {
-        int indexSouris = animaux.indexOf(souris);
-
-        if (indexSouris >= 0) {
-            sourisSorties.add((Souris) animaux.remove(indexSouris));
-
-        }
-    }
-
-    private void faireEntrerNouvelleSouris() {
-        if (sourisDansTrou.isEmpty()) {
-            return;
-        }
-
-        ajouterSourisDansMap(sourisDansTrou.get(0));
-    }
-
     private List<Animal> getAnimauxDansCase(int x, int y) {
         return animaux.stream()
                 .filter(animal -> animal.getX() == x && animal.getY() == y)
                 .collect(Collectors.toList());
+    }
+
+    private void tuerAnimal(Animal animal) {
+
+        removeObservateur(animal);
+
+        animaux.remove(animal);
+    }
+
+    private boolean verifierSiMourir(Animal inAnimal) {
+        Animal animalPlusFort = getAnimalPlusFort(inAnimal.getX(), inAnimal.getY());
+
+        return inAnimal instanceof Souris && animalPlusFort instanceof Chat;
     }
 
     private void inverserSens(Animal animal) {
@@ -245,6 +247,54 @@ public class Model extends AbstractModel {
 
         addObservateur(souris);
         animaux.add(souris);
+    }
+
+    private void sortirSouris(Souris souris) {
+        int indexSouris = animaux.indexOf(souris);
+
+        if (indexSouris >= 0) {
+            removeObservateur(animaux.get(indexSouris));
+
+            sourisSorties.add((Souris) animaux.remove(indexSouris));
+
+        }
+    }
+
+
+    private void initialiserSourisDansTrous() {
+        
+        Rectangle positionTrou = recupererPositionTrouEntree();
+
+        if (Objects.isNull(positionTrou)) {
+            throw new NoEntryFoundException();
+        }
+        
+        for (int i = 0; i < NB_SOURIS_IN; i++) {
+            Souris souris = new Souris(positionTrou.x, positionTrou.y);
+            souris.setxDir(+1);
+            sourisDansTrou.add(souris);
+        }
+    }
+
+    private Rectangle recupererPositionTrouEntree() {
+        Rectangle positionTrou = null;
+
+        for (Map.Entry<Integer, Map<Integer, TypeCase>> entryLigne : cases.entrySet()) {
+            int x = entryLigne.getKey();
+
+            for (Map.Entry<Integer, TypeCase> entryColonne : entryLigne.getValue().entrySet()) {
+                int y = entryColonne.getKey();
+
+                if (TypeCase.IN.equals(entryColonne.getValue())) {
+                    positionTrou = new Rectangle();
+
+                    positionTrou.x = x;
+                    positionTrou.y = y;
+                }
+            }
+        }
+
+        return positionTrou;
     }
 
 }
