@@ -1,6 +1,7 @@
 package res.controler;
 
 import res.model.AbstractModel;
+import res.model.Model;
 import res.model.TypeCase;
 
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Controler extends AbstractControler {
-    private long period = 256_000_000; //ms -> nano // sleeping time
+    private static long PERIOD = 512_000_000L; //ms -> nano // sleeping time
     private static final int DELAYS_BEFORE_YIELD = 10;
     public Controler(AbstractModel model) {
         super(model);
@@ -18,6 +19,13 @@ public class Controler extends AbstractControler {
     public void cliqueSur(int x, int y) {
 
         TypeCase typeCase = model.getTypeCase(x, y);
+
+        // TODO Supprimer cette phase de tests
+        boolean isIn = TypeCase.IN.equals(typeCase);
+        if (isIn) {
+            Model tempModel = (Model) model;
+            tempModel.faireEntrerNouvelleSouris();
+        }
 
         boolean isChemin = TypeCase.CHEMIN.equals(typeCase);
 
@@ -59,10 +67,10 @@ public class Controler extends AbstractControler {
 
         afterTime = System.nanoTime();
         diff = afterTime - beforeTime;
-        sleepTime = (period - diff) - overSleepTime;
+        sleepTime = (PERIOD - diff) - overSleepTime;
 
         // If the sleep time is between 0 and the period, we can happily sleep
-        if ( sleepTime < period && sleepTime > 0){
+        if ( sleepTime < PERIOD && sleepTime > 0){
             try {
                 Thread.sleep(sleepTime / 1_000_000L);
             } catch (InterruptedException ex) {
@@ -70,7 +78,7 @@ public class Controler extends AbstractControler {
             }
         }
         // Accumulate the amount of delays and eventually yeild
-        else if(diff < period && ++delays >= DELAYS_BEFORE_YIELD){
+        else if(diff < PERIOD && ++delays >= DELAYS_BEFORE_YIELD){
             Thread.yield();
         }
     }
