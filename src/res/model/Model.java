@@ -4,6 +4,7 @@ import res.model.animal.Animal;
 import res.model.animal.Chat;
 import res.model.animal.Souris;
 import res.model.exceptions.NoEntryFoundException;
+import res.model.map.Carte;
 import res.model.map.MapLoader;
 
 import java.awt.*;
@@ -23,7 +24,7 @@ public class Model extends AbstractModel {
 
     private MapLoader mapLoader = new MapLoader();
 
-    private Map<Integer, Map<Integer, TypeCase>> cases = new HashMap<>();
+    private Carte carte = new Carte();
 
     public void initialiserAnimaux(String nomFichier) {
         List<Animal> animauxCarte = mapLoader.getCharacters(nomFichier);
@@ -109,17 +110,12 @@ public class Model extends AbstractModel {
     @Override
     public TypeCase getTypeCase(int x, int y) {
 
-        Map<Integer, TypeCase> ligneCase = cases.get(x);
-
-        return Objects.isNull(ligneCase)
-                ? null
-                : ligneCase.get(y);
+        return carte.getTypeCase(x, y);
     }
 
     @Override
     public void setTypeCase(int x, int y, TypeCase tc) {
-        cases.computeIfAbsent(x, k -> new HashMap<>())
-                .put(y, tc);
+        carte.setTypeCase(x, y, tc);
     }
 
     @Override
@@ -158,16 +154,12 @@ public class Model extends AbstractModel {
 
     @Override
     public int getLargeur() {
-        Map<Integer, TypeCase> premiereLigne = cases.get(0);
-
-        return Objects.isNull(premiereLigne)
-                ? 0
-                : premiereLigne.size();
+        return carte.getLargeur();
     }
 
     @Override
     public int getHauteur() {
-        return cases.size();
+        return carte.getHauteur();
     }
 
     @Override
@@ -183,16 +175,7 @@ public class Model extends AbstractModel {
     @Override
     public int getNbFlecheUtilisee() {
 
-        int count = 0;
-
-        for (Map<Integer, TypeCase> ligne : cases.values()) {
-            count += ligne.values()
-                    .stream()
-                    .filter(TypeCase::isArrow)
-                    .count();
-        }
-
-        return count;
+        return carte.getNbFlecheUtilisee();
     }
 
     @Override
@@ -277,24 +260,7 @@ public class Model extends AbstractModel {
     }
 
     private Rectangle recupererPositionTrouEntree() {
-        Rectangle positionTrou = null;
-
-        for (Map.Entry<Integer, Map<Integer, TypeCase>> entryLigne : cases.entrySet()) {
-            int x = entryLigne.getKey();
-
-            for (Map.Entry<Integer, TypeCase> entryColonne : entryLigne.getValue().entrySet()) {
-                int y = entryColonne.getKey();
-
-                if (TypeCase.IN.equals(entryColonne.getValue())) {
-                    positionTrou = new Rectangle();
-
-                    positionTrou.x = x;
-                    positionTrou.y = y;
-                }
-            }
-        }
-
-        return positionTrou;
+        return carte.recupererPositionTrouEntree();
     }
 
 }
