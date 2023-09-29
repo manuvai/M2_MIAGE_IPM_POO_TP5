@@ -205,8 +205,9 @@ public class Model extends AbstractModel {
 
     @Override
     public boolean partieTerminer() {
-        return getNbSourisIn() == 0;
+        return getNbSourisIn() == 0 && recupererNbSourisBougeant() == 0;
     }
+    
     private List<Animal> getAnimauxDansCase(int x, int y) {
         return animaux.stream()
                 .filter(animal -> animal.getX() == x && animal.getY() == y)
@@ -216,6 +217,12 @@ public class Model extends AbstractModel {
     private void tuerAnimal(Animal animal) {
 
         animaux.remove(animal);
+    }
+
+    private int recupererNbSourisBougeant() {
+        return (int) animaux.stream()
+                .filter(Souris.class::isInstance)
+                .count();
     }
 
     private boolean verifierSiMourir(Animal inAnimal) {
@@ -250,7 +257,8 @@ public class Model extends AbstractModel {
 
         if (indexSouris >= 0) {
 
-            sourisSorties.add((Souris) animaux.remove(indexSouris));
+            sourisSorties.add(souris);
+            animaux.remove(indexSouris);
 
         }
     }
