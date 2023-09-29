@@ -2,8 +2,13 @@ package res.model.map;
 
 import res.model.TypeCase;
 import res.model.animal.Animal;
+import res.model.exceptions.AnimalCreationFailedException;
+import res.model.exceptions.ImpossibleToExtractLinesException;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -13,6 +18,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class MapLoader {
+
+    public static final String SPLIT_STRING = ";";
+
     public List<List<TypeCase>> getMapTiles(String file) {
 
         List<String> mapStrings = extractMapString(file);
@@ -24,10 +32,9 @@ public class MapLoader {
     }
     public List<Animal> getCharacters(String file) {
 
-
         List<String> mapStrings = extractMapString(file);
 
-        List<List<String>> records = extractTileString(mapStrings, ";");
+        List<List<String>> records = extractTileString(mapStrings, SPLIT_STRING);
 
         List<Animal> animaux = new ArrayList<>();
 
@@ -37,9 +44,10 @@ public class MapLoader {
             if (Objects.nonNull(animalClazz)) {
                 try {
                     Constructor<?> constructor = animalClazz.getConstructor(int.class, int.class);
-                    int x = Integer.parseInt(records.get(i).get(2));
-                    int y = Integer.parseInt(records.get(i).get(1));
-                    Animal animal = (Animal) constructor.newInstance(new Object[] {x, y});
+                    int x = Integer.parseInt(records.get(i).get(1));
+                    int y = Integer.parseInt(records.get(i).get(2));
+
+                    Animal animal = (Animal) constructor.newInstance(x, y);
 
                     animal.setxDir(Integer.parseInt(records.get(i).get(3)));
                     animal.setyDir(Integer.parseInt(records.get(i).get(4)));
@@ -47,7 +55,7 @@ public class MapLoader {
                     animaux.add(animal);
 
                 } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-                    throw new RuntimeException(e);
+                    throw new AnimalCreationFailedException(animalClazz);
                 }
             }
         }
@@ -64,7 +72,7 @@ public class MapLoader {
         try {
             mapStrings = readFromInputStream(inputStream);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ImpossibleToExtractLinesException();
         }
         return mapStrings;
     }
@@ -79,6 +87,12 @@ public class MapLoader {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retourne une liste de liste de cases à partir des lignes d'un fichier.
+     *
+     * @param tilesString
+     * @return
+     */
     private List<List<TypeCase>> constructTilesFromString(
             List<List<String>> tilesString
     ) {
@@ -96,6 +110,13 @@ public class MapLoader {
         return mapTiles;
     }
 
+    /**
+     * Permet de lire le contenu d'un fichier contenu dans le InputStream
+     *
+     * @param inputStream
+     * @return
+     * @throws IOException
+     */
     private List<String> readFromInputStream(InputStream inputStream)
             throws IOException {
 
