@@ -98,6 +98,11 @@ public class Model extends AbstractModel {
             if (TypeCase.MUR.equals(futureCase)) {
                 inverserSens(animal);
             }
+            futureCase = getFutureCase(animal);
+            if (TypeCase.MUR.equals(futureCase)) {
+                animal.setxDir(0);
+                animal.setyDir(0);
+            }
 
             animal.move();
         }
@@ -106,17 +111,6 @@ public class Model extends AbstractModel {
 
         animauxTues.forEach(this::tuerAnimal);
         souriesSorties.forEach(this::sortirSouris);
-    }
-
-    private void calculerSiFaireEntrerSouris() {
-
-        boolean isTimeToEnter = Objects.isNull(dateDerniereEntree) ||
-                (new Date()).getTime() - dateDerniereEntree.getTime() >= DELAY_TO_ENTER * 1000;
-
-        if (isTimeToEnter) {
-            faireEntrerNouvelleSouris();
-            dateDerniereEntree = new Date();
-        }
     }
 
     public TypeCase getFutureCase(Animal animal) {
@@ -229,6 +223,17 @@ public class Model extends AbstractModel {
         Animal animalPlusFort = getAnimalPlusFort(inAnimal.getX(), inAnimal.getY());
 
         return inAnimal instanceof Souris && animalPlusFort instanceof Chat;
+    }
+
+    private void calculerSiFaireEntrerSouris() {
+
+        boolean isTimeToEnter = Objects.isNull(dateDerniereEntree) ||
+                (new Date()).getTime() - dateDerniereEntree.getTime() >= DELAY_TO_ENTER * 1000;
+
+        if (isTimeToEnter) {
+            faireEntrerNouvelleSouris();
+            dateDerniereEntree = new Date();
+        }
     }
 
     private void inverserSens(Animal animal) {
