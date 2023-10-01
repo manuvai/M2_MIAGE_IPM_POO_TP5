@@ -30,8 +30,9 @@ public class Ligne {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Ligne ligne)) return false;
-        return Objects.equals(cases, ligne.cases);
+        if (!(o instanceof Ligne)) return false;
+        Ligne that = (Ligne) o;
+        return Objects.equals(cases, that.cases);
     }
 
     @Override
