@@ -26,4 +26,16 @@ public class Ligne {
     public Set<Map.Entry<Integer, TypeCase>> entrySet() {
         return cases.entrySet();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Ligne ligne)) return false;
+        return Objects.equals(cases, ligne.cases);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(cases);
+    }
 }
