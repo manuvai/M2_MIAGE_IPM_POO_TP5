@@ -35,11 +35,6 @@ public class TP5 {
 
             controler.calculerStepSuivant();
 
-            // TODO Demander c'est quoi des souris cachées
-            //  Celles dans le trou
-            // TODO Demander comment les souris sortent
-            //  Toutes les x secondes, dans le sens de la ligne ou dans un sens random
-
         }
     }
     
