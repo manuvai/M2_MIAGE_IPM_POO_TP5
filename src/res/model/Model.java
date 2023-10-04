@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class Model extends AbstractModel {
     
-    private static final int NB_SOURIS_IN = 10;
+    private static final int NB_SOURIS_IN = 3;
 
     private static final int DELAY_TO_ENTER = 5;
 
@@ -33,12 +33,11 @@ public class Model extends AbstractModel {
     public void initialiserAnimaux(String nomFichier) {
         List<Animal> animauxCarte = mapLoader.getCharacters(nomFichier);
 
-        if (Objects.isNull(animauxCarte) || animauxCarte.isEmpty()) {
-            return;
+        if (Objects.nonNull(animauxCarte)) {
+            setAnimaux(animauxCarte);
+            initialiserSourisDansTrous();
         }
 
-        setAnimaux(animauxCarte);
-        initialiserSourisDansTrous();
     }
 
     public void initialiserCarte(String nomFichier) {
@@ -79,6 +78,7 @@ public class Model extends AbstractModel {
             calculerDemiTour(animal);
 
             TypeCase futureCase = getFutureCase(animal);
+            TypeCase caseActuelle = getTypeCase(animal.getX(), animal.getY());
 
             if (TypeCase.MUR.equals(futureCase)) {
                 animal.setxDir(0);
