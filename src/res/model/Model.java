@@ -69,36 +69,17 @@ public class Model extends AbstractModel {
             }
 
             if (animal instanceof Souris) {
-                if (TypeCase.FLECHE_HAUT.equals(typeCase)) {
-                    animal.setxDir(0);
-                    animal.setyDir(-1);
+                calculerDeplacementAnimal(animal, typeCase);
 
-                }
-                else if (TypeCase.FLECHE_DROITE.equals(typeCase)) {
-                    animal.setxDir(+1);
-                    animal.setyDir(0);
-
-                }
-                else if (TypeCase.FLECHE_BAS.equals(typeCase)) {
-                    animal.setxDir(0);
-                    animal.setyDir(+1);
-
-                }
-                else if (TypeCase.FLECHE_GAUCHE.equals(typeCase)) {
-                    animal.setxDir(-1);
-                    animal.setyDir(0);
-
-                } else if (TypeCase.OUT.equals(typeCase)) {
+                if (TypeCase.OUT.equals(typeCase)) {
                     souriesSorties.add((Souris) animal);
                 }
             }
 
+            calculerDemiTour(animal);
+
             TypeCase futureCase = getFutureCase(animal);
 
-            if (TypeCase.MUR.equals(futureCase)) {
-                inverserSens(animal);
-            }
-            futureCase = getFutureCase(animal);
             if (TypeCase.MUR.equals(futureCase)) {
                 animal.setxDir(0);
                 animal.setyDir(0);
@@ -201,7 +182,56 @@ public class Model extends AbstractModel {
     public boolean partieTerminer() {
         return getNbSourisIn() == 0 && recupererNbSourisBougeant() == 0;
     }
-    
+
+
+    private void calculerDemiTour(Animal animal) {
+        if (Objects.isNull(animal)) {
+            return;
+        }
+
+        TypeCase futureCase = getFutureCase(animal);
+
+        List<Animal> animauxDansCase = getAnimauxDansCase(
+                animal.getX() + animal.getxDir(),
+                animal.getY() + animal.getyDir());
+
+        boolean isSameInstance = !animauxDansCase.isEmpty() &&
+                animal.getClass()
+                        .equals(getAnimalPlusFort(animauxDansCase).getClass());
+
+        // TODO Corriger bug
+
+        if (TypeCase.MUR.equals(futureCase) || isSameInstance) {
+            inverserSens(animal);
+        }
+    }
+
+    private void calculerDeplacementAnimal(Animal animal, TypeCase typeCase) {
+        if (Objects.isNull(animal) || Objects.isNull(typeCase)) {
+            return;
+        }
+
+        if (TypeCase.FLECHE_HAUT.equals(typeCase)) {
+            animal.setxDir(0);
+            animal.setyDir(-1);
+
+        }
+        else if (TypeCase.FLECHE_DROITE.equals(typeCase)) {
+            animal.setxDir(+1);
+            animal.setyDir(0);
+
+        }
+        else if (TypeCase.FLECHE_BAS.equals(typeCase)) {
+            animal.setxDir(0);
+            animal.setyDir(+1);
+
+        }
+        else if (TypeCase.FLECHE_GAUCHE.equals(typeCase)) {
+            animal.setxDir(-1);
+            animal.setyDir(0);
+
+        }
+    }
     private List<Animal> getAnimauxDansCase(int x, int y) {
         return animaux.stream()
                 .filter(animal -> animal.getX() == x && animal.getY() == y)
