@@ -13,7 +13,7 @@ public class Carte {
 
     public void setTypeCase(int x, int y, TypeCase tc) {
         lignes.computeIfAbsent(x, k -> new Ligne())
-                .put(y, tc);
+                .setTypeCase(x, y, tc);
     }
 
     public TypeCase getTypeCase(int x, int y) {
@@ -21,7 +21,7 @@ public class Carte {
 
         return Objects.isNull(ligneCase)
                 ? null
-                : ligneCase.get(y);
+                : ligneCase.get(y).getTypeCase();
     }
 
     public int getLargeur() {
@@ -55,10 +55,10 @@ public class Carte {
         for (Map.Entry<Integer, Ligne> entryLigne : lignes.entrySet()) {
             int x = entryLigne.getKey();
 
-            for (Map.Entry<Integer, TypeCase> entryColonne : entryLigne.getValue().entrySet()) {
+            for (Map.Entry<Integer, Case> entryColonne : entryLigne.getValue().entrySet()) {
                 int y = entryColonne.getKey();
 
-                if (TypeCase.IN.equals(entryColonne.getValue())) {
+                if (TypeCase.IN.equals(entryColonne.getValue().getTypeCase())) {
                     positionTrou = new Rectangle();
 
                     positionTrou.x = x;

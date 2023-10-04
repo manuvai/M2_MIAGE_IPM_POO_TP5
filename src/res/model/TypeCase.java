@@ -5,6 +5,8 @@
  */
 package res.model;
 
+import res.model.map.Case;
+
 import java.util.Objects;
 
 /**
@@ -19,6 +21,10 @@ public enum TypeCase {
     FLECHE_DROITE,
     FLECHE_BAS,
     FLECHE_GAUCHE;
+
+    public static boolean isArrow(Case cell) {
+        return isArrow(cell.getTypeCase());
+    }
 
     public static boolean isArrow(TypeCase typeCase) {
         return Objects.nonNull(typeCase) && (

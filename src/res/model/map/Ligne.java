@@ -5,13 +5,9 @@ import res.model.TypeCase;
 import java.util.*;
 
 public class Ligne {
-    private Map<Integer, TypeCase> cases = new HashMap<>();
+    private Map<Integer, Case> cases = new HashMap<>();
 
-    public void put(Integer index, TypeCase typeCase) {
-        cases.put(index, typeCase);
-    }
-
-    public TypeCase get(Integer index) {
+    public Case get(Integer index) {
         return cases.get(index);
     }
 
@@ -19,12 +15,18 @@ public class Ligne {
         return cases.size();
     }
 
-    public Collection<TypeCase> values() {
+    public Collection<Case> values() {
         return cases.values();
     }
 
-    public Set<Map.Entry<Integer, TypeCase>> entrySet() {
+    public Set<Map.Entry<Integer, Case>> entrySet() {
         return cases.entrySet();
+    }
+
+    public void setTypeCase(int x, int y, TypeCase typeCase) {
+        cases.computeIfAbsent(y, k -> new Case(x, y, typeCase))
+                .setTypeCase(typeCase);
+
     }
 
     @Override
