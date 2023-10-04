@@ -9,15 +9,15 @@ import java.util.Objects;
 
 public class Carte {
 
-    private Map<Integer, Ligne> cases = new HashMap<>();
+    private Map<Integer, Ligne> lignes = new HashMap<>();
 
     public void setTypeCase(int x, int y, TypeCase tc) {
-        cases.computeIfAbsent(x, k -> new Ligne())
+        lignes.computeIfAbsent(x, k -> new Ligne())
                 .put(y, tc);
     }
 
     public TypeCase getTypeCase(int x, int y) {
-        Ligne ligneCase = cases.get(x);
+        Ligne ligneCase = lignes.get(x);
 
         return Objects.isNull(ligneCase)
                 ? null
@@ -25,7 +25,7 @@ public class Carte {
     }
 
     public int getLargeur() {
-        Ligne premiereLigne = cases.get(0);
+        Ligne premiereLigne = lignes.get(0);
 
         return Objects.isNull(premiereLigne)
                 ? 0
@@ -33,13 +33,13 @@ public class Carte {
     }
 
     public int getHauteur() {
-        return cases.size();
+        return lignes.size();
     }
 
     public int getNbFlecheUtilisee() {
         int count = 0;
 
-        for (Ligne ligne : cases.values()) {
+        for (Ligne ligne : lignes.values()) {
             count += ligne.values()
                     .stream()
                     .filter(TypeCase::isArrow)
@@ -52,7 +52,7 @@ public class Carte {
     public Rectangle recupererPositionTrouEntree() {
         Rectangle positionTrou = null;
 
-        for (Map.Entry<Integer, Ligne> entryLigne : cases.entrySet()) {
+        for (Map.Entry<Integer, Ligne> entryLigne : lignes.entrySet()) {
             int x = entryLigne.getKey();
 
             for (Map.Entry<Integer, TypeCase> entryColonne : entryLigne.getValue().entrySet()) {
