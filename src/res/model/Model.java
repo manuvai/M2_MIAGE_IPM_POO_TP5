@@ -260,10 +260,18 @@ public class Model extends AbstractModel {
         boolean isTimeToEnter = Objects.isNull(dateDerniereEntree) ||
                 (new Date()).getTime() - dateDerniereEntree.getTime() >= DELAY_TO_ENTER * 1000;
 
-        if (isTimeToEnter) {
+        if (isTimeToEnter && isPossibleToEnter()) {
             faireEntrerNouvelleSouris();
             dateDerniereEntree = new Date();
         }
+    }
+
+    private boolean isPossibleToEnter() {
+        Rectangle positionTrou = recupererPositionTrouEntree();
+
+        List<Animal> animauxSurCaseTrou = getAnimauxDansCase((int) positionTrou.getX(), (int) positionTrou.getY());
+
+        return animauxSurCaseTrou.isEmpty();
     }
 
     private void inverserSens(Animal animal) {
