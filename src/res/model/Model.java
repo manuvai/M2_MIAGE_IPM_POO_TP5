@@ -5,12 +5,13 @@ import res.model.animal.Chat;
 import res.model.animal.Souris;
 import res.model.exceptions.NoEntryFoundException;
 import res.model.map.Carte;
-import res.model.map.Case;
 import res.model.map.MapLoader;
 
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Model extends AbstractModel {
@@ -91,13 +92,6 @@ public class Model extends AbstractModel {
 
         animauxTues.forEach(this::tuerAnimal);
         souriesSorties.forEach(this::sortirSouris);
-    }
-
-    private boolean canMove(Animal animal) {
-        List<Animal> animauxDansFutureCase = getAnimauxDansCase(animal.getX() + animal.getxDir(), animal.getY() + animal.getyDir());
-
-        TypeCase futureCase = getFutureCase(animal);
-        return animauxDansFutureCase.isEmpty() && !TypeCase.MUR.equals(futureCase);
     }
 
     public TypeCase getFutureCase(Animal animal) {
@@ -187,8 +181,12 @@ public class Model extends AbstractModel {
     public boolean partieTerminer() {
         return getNbSourisIn() == 0 && recupererNbSourisBougeant() == 0;
     }
+    private boolean canMove(Animal animal) {
+        List<Animal> animauxDansFutureCase = getAnimauxDansCase(animal.getX() + animal.getxDir(), animal.getY() + animal.getyDir());
 
-
+        TypeCase futureCase = getFutureCase(animal);
+        return animauxDansFutureCase.isEmpty() && !TypeCase.MUR.equals(futureCase);
+    }
     private void calculerDemiTour(Animal animal) {
         if (Objects.nonNull(animal)) {
             TypeCase futureCase = getFutureCase(animal);
@@ -200,8 +198,6 @@ public class Model extends AbstractModel {
             boolean isSameInstance = !animauxDansCase.isEmpty() &&
                     animal.getClass()
                             .equals(getAnimalPlusFort(animauxDansCase).getClass());
-
-            // TODO Corriger bug
 
             if (TypeCase.MUR.equals(futureCase) || isSameInstance) {
                 inverserSens(animal);
