@@ -128,27 +128,26 @@ public class Model extends AbstractModel {
         List<Souris> souriesSorties = new ArrayList<>();
 
         for (Animal animal : animaux) {
-            TypeCase typeCase = getTypeCase(animal.getX(), animal.getY());
 
             if (verifierSiMourir(animal)) {
                 animauxTues.add(animal);
-            }
 
-            if (animal instanceof Souris) {
-                calculerDeplacementAnimal(animal, typeCase);
+            } else {
+                TypeCase typeCase = getTypeCase(animal.getX(), animal.getY());
+                if (animal instanceof Souris) {
+                    calculeDirectionAnimal(animal, typeCase);
 
-                if (TypeCase.OUT.equals(typeCase)) {
-                    souriesSorties.add((Souris) animal);
+                    if (TypeCase.OUT.equals(typeCase)) {
+                        souriesSorties.add((Souris) animal);
+                    }
                 }
-            }
 
-            if (!TypeCase.isArrow(typeCase)) {
-                calculerDemiTour(animal);
+                calculerFuturDeplacementAnimal(animal, typeCase);
 
-            }
+                if (canMove(animal)) {
+                    animal.move();
 
-            if (canMove(animal)) {
-                animal.move();
+                }
 
             }
         }
@@ -287,7 +286,7 @@ public class Model extends AbstractModel {
      * @param animal
      * @param typeCase
      */
-    private void calculerDeplacementAnimal(Animal animal, TypeCase typeCase) {
+    private void calculeDirectionAnimal(Animal animal, TypeCase typeCase) {
         if (Objects.nonNull(animal) && Objects.nonNull(typeCase)) {
 
             if (TypeCase.FLECHE_HAUT.equals(typeCase)) {
@@ -310,6 +309,22 @@ public class Model extends AbstractModel {
                 animal.setyDir(0);
 
             }
+        }
+    }
+
+    /**
+     * Détermine le prochain déplacement de l'animal
+     *
+     * @param animal
+     * @param typeCase
+     */
+    private void calculerFuturDeplacementAnimal(Animal animal, TypeCase typeCase) {
+        if (Objects.nonNull(animal) &&
+                Objects.nonNull(typeCase) &&
+                !TypeCase.isArrow(typeCase)
+        ) {
+            calculerDemiTour(animal);
+
         }
     }
 
