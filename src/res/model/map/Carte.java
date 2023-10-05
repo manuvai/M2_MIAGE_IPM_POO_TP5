@@ -36,6 +36,11 @@ public class Carte {
         return lignes.size();
     }
 
+    /**
+     * Récupère le nombre de flèches utilisées dans la carte
+     *
+     * @return
+     */
     public int getNbFlecheUtilisee() {
         int count = 0;
 
@@ -49,6 +54,11 @@ public class Carte {
         return count;
     }
 
+    /**
+     * Récupère la position du trou d'entrée
+     *
+     * @return
+     */
     public Rectangle recupererPositionTrouEntree() {
         Rectangle positionTrou = null;
 

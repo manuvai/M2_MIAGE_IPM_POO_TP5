@@ -32,6 +32,11 @@ public class Model extends AbstractModel {
 
     private Date dateDerniereEntree;
 
+    /**
+     * Cette méthode permet d'initialiser les animaux à partir d'un nom de fichier (notamment les chats)
+     *
+     * @param nomFichier
+     */
     public void initialiserAnimaux(String nomFichier) {
         List<Animal> animauxCarte = mapLoader.getCharacters(nomFichier);
 
@@ -42,6 +47,11 @@ public class Model extends AbstractModel {
 
     }
 
+    /**
+     * Cette méthode permet d'initialiser la carte à partir d'un fichier contenant les cases
+     *
+     * @param nomFichier
+     */
     public void initialiserCarte(String nomFichier) {
         List<List<TypeCase>> casesCarte = mapLoader.getMapTiles(nomFichier);
 
@@ -56,6 +66,10 @@ public class Model extends AbstractModel {
         }
     }
 
+    /**
+     * Cette méthode permet de déplacer les animaux
+     *
+     */
     @Override
     public void faireSeDeplacerLesAnimaux() {
 
@@ -94,23 +108,50 @@ public class Model extends AbstractModel {
         souriesSorties.forEach(this::sortirSouris);
     }
 
+    /**
+     * Cette méthode permet de récupérer la future classe d'un animal
+     *
+     * @param animal
+     * @return
+     */
     public TypeCase getFutureCase(Animal animal) {
         return Objects.isNull(animal)
                 ? null
                 : getTypeCase(animal.getX() + animal.getxDir(), animal.getY() + animal.getyDir());
     }
 
+    /**
+     * Permet de récupérer le type d'une case
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     @Override
     public TypeCase getTypeCase(int x, int y) {
 
         return carte.getTypeCase(x, y);
     }
 
+    /**
+     * Permet de définir le type d'une case
+     *
+     * @param x
+     * @param y
+     * @param tc
+     */
     @Override
     public void setTypeCase(int x, int y, TypeCase tc) {
         carte.setTypeCase(x, y, tc);
     }
 
+    /**
+     * Permet de récupérer l'animal le plus fort dans une case
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     @Override
     public Animal getAnimalPlusFort(int x, int y) {
 
@@ -121,6 +162,12 @@ public class Model extends AbstractModel {
                 : getAnimalPlusFort(animauxDansCase);
     }
 
+    /**
+     * Permet de récupérer l'animal le plus fort d'une liste donnée en paramètre
+     *
+     * @param animaux
+     * @return
+     */
     public Animal getAnimalPlusFort(List<Animal> animaux) {
         int indexBest = -1;
 
@@ -135,13 +182,6 @@ public class Model extends AbstractModel {
         return Objects.isNull(animaux)
                 ? null
                 : animaux.get(indexBest);
-    }
-
-    public void faireEntrerNouvelleSouris() {
-        if (!sourisDansTrou.isEmpty()) {
-            ajouterSourisDansMap(sourisDansTrou.remove(0));
-        }
-
     }
 
     @Override
@@ -181,6 +221,13 @@ public class Model extends AbstractModel {
     public boolean partieTerminer() {
         return getNbSourisIn() == 0 && recupererNbSourisBougeant() == 0;
     }
+
+    /**
+     * Détermine si un animal peut bouger ou non
+     *
+     * @param animal
+     * @return
+     */
     private boolean canMove(Animal animal) {
         boolean canMove = false;
 
@@ -197,6 +244,12 @@ public class Model extends AbstractModel {
 
         return canMove;
     }
+
+    /**
+     * Fais faire demi-tour à un animal si nécessaire
+     *
+     * @param animal
+     */
     private void calculerDemiTour(Animal animal) {
         if (Objects.nonNull(animal)) {
             TypeCase futureCase = getFutureCase(animal);
@@ -217,6 +270,23 @@ public class Model extends AbstractModel {
 
     }
 
+    /**
+     * Fais entrer une nouvelle souris dans la carte
+     *
+     */
+    private void faireEntrerNouvelleSouris() {
+        if (!sourisDansTrou.isEmpty()) {
+            ajouterSourisDansMap(sourisDansTrou.remove(0));
+        }
+
+    }
+
+    /**
+     * Effectue les calculs pour déterminer la future direction d'un animal
+     *
+     * @param animal
+     * @param typeCase
+     */
     private void calculerDeplacementAnimal(Animal animal, TypeCase typeCase) {
         if (Objects.nonNull(animal) && Objects.nonNull(typeCase)) {
 
@@ -242,29 +312,57 @@ public class Model extends AbstractModel {
             }
         }
     }
+
+    /**
+     * Récupère la liste des animaux dans une case donnée
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     private List<Animal> getAnimauxDansCase(int x, int y) {
         return animaux.stream()
                 .filter(animal -> animal.getX() == x && animal.getY() == y)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Tue un animal
+     *
+     * @param animal
+     */
     private void tuerAnimal(Animal animal) {
 
         animaux.remove(animal);
     }
 
+    /**
+     * Récupère le nombre de souris sur le plateau
+     *
+     * @return
+     */
     private int recupererNbSourisBougeant() {
         return (int) animaux.stream()
                 .filter(Souris.class::isInstance)
                 .count();
     }
 
+    /**
+     * Détermine si un animal doit mourir
+     *
+     * @param inAnimal
+     * @return
+     */
     private boolean verifierSiMourir(Animal inAnimal) {
         Animal animalPlusFort = getAnimalPlusFort(inAnimal.getX(), inAnimal.getY());
 
         return inAnimal instanceof Souris && animalPlusFort instanceof Chat;
     }
 
+    /**
+     * Rajoute une souris si nécessaire
+     *
+     */
     private void calculerSiFaireEntrerSouris() {
 
         boolean isTimeToEnter = Objects.isNull(dateDerniereEntree) ||
@@ -276,6 +374,11 @@ public class Model extends AbstractModel {
         }
     }
 
+    /**
+     * Détermine si une souris peut entrer
+     *
+     * @return
+     */
     private boolean isPossibleToEnter() {
         Rectangle positionTrou = recupererPositionTrouEntree();
 
@@ -284,11 +387,21 @@ public class Model extends AbstractModel {
         return animauxSurCaseTrou.isEmpty();
     }
 
+    /**
+     * Inverse le sens de déplacement d'un animal donné
+     *
+     * @param animal
+     */
     private void inverserSens(Animal animal) {
         animal.setxDir(-animal.getxDir());
         animal.setyDir(-animal.getyDir());
     }
 
+    /**
+     * Affecte les animaux
+     *
+     * @param inAnimaux
+     */
     private void setAnimaux(List<Animal> inAnimaux) {
         if (Objects.nonNull(inAnimaux)) {
             animaux = inAnimaux;
@@ -296,6 +409,11 @@ public class Model extends AbstractModel {
 
     }
 
+    /**
+     * Ajoute une souris dans le plateau
+     *
+     * @param souris
+     */
     private void ajouterSourisDansMap(Souris souris) {
         if (Objects.nonNull(souris)) {
             animaux.add(souris);
@@ -304,6 +422,11 @@ public class Model extends AbstractModel {
 
     }
 
+    /**
+     * Sors une souris du plateau
+     *
+     * @param souris
+     */
     private void sortirSouris(Souris souris) {
         int indexSouris = animaux.indexOf(souris);
 
@@ -315,7 +438,10 @@ public class Model extends AbstractModel {
         }
     }
 
-
+    /**
+     * Initialise les souris dans le trou
+     *
+     */
     private void initialiserSourisDansTrous() {
         
         Rectangle positionTrou = recupererPositionTrouEntree();
@@ -331,6 +457,11 @@ public class Model extends AbstractModel {
         }
     }
 
+    /**
+     * Récupère la position du trou d'entrée
+     *
+     * @return
+     */
     private Rectangle recupererPositionTrouEntree() {
         return carte.recupererPositionTrouEntree();
     }

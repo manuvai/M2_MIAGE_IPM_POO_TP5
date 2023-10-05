@@ -14,6 +14,8 @@ import java.util.Objects;
  * @author manuvai.rehua@gmail.com
  */
 public class PanelJeu extends javax.swing.JPanel {
+
+    private static final boolean DEBUG = false;
     private Vue fenetre;
     private Graphics cg;
 
@@ -104,13 +106,15 @@ public class PanelJeu extends javax.swing.JPanel {
                 (int) rectangleJeu.getWidth(),
                 this);
 
-        String text = animal.toString().substring("res.model.animal.Souris".length());
+        if (DEBUG) {
+            String text = animal.toString().substring("res.model.animal.Souris".length());
 
-        Font font = new Font("Arial", Font.BOLD, 18);
+            Font font = new Font("Arial", Font.BOLD, 18);
 
-        cg.setFont(font);
-        cg.setColor(Color.GREEN);
-        cg.drawString(text, posX, posY);
+            cg.setFont(font);
+            cg.setColor(Color.GREEN);
+            cg.drawString(text, posX, posY);
+        }
 
     }
 }
