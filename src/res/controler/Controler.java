@@ -21,13 +21,6 @@ public class Controler extends AbstractControler {
 
         TypeCase typeCase = model.getTypeCase(x, y);
 
-        // TODO Supprimer cette phase de tests
-        boolean isIn = TypeCase.IN.equals(typeCase);
-        if (isIn) {
-            Model tempModel = (Model) model;
-            tempModel.faireEntrerNouvelleSouris();
-        }
-
         boolean isChemin = TypeCase.CHEMIN.equals(typeCase);
 
         if (!isChemin ||
