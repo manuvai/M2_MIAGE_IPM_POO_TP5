@@ -1,0 +1,54 @@
+@startuml
+
+!definelong change_diamong_bg($color)
+
+<style>
+diamond {
+  BackgroundColor $color
+}
+</style>
+
+!enddefinelong
+
+change_diamong_bg(White/Yellow)
+
+!definelong t($name)
+:$name;
+!enddefinelong
+
+start
+
+if (Souris veut sortir du trou ?) then (oui)
+    repeat
+        t(Vérifier si le trou est obstrué)
+    repeat while (trou obstrué)
+
+    t(Sortir du trou)
+
+endif
+
+
+if (Animal plus fort dans même case ?) then (oui)
+    t(Mourir)
+    end
+
+else if (Case actuelle contient flèche) then (oui)
+        t(Modifier direction en f° de la flèche)
+endif
+
+group Déterminer classe à bouger
+
+    if (Future case contient une souris\nOU future case est un mur ?) then (oui)
+        t(Chercher échapatoire)
+        t(Échapatoire = Future Case)
+
+    endif
+end group
+
+if (Future case n'est pas nulle) then (oui)
+    t(Bouger)
+endif
+
+end
+
+@enduml
