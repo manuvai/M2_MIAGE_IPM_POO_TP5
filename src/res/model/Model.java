@@ -76,7 +76,10 @@ public class Model extends AbstractModel {
                 }
             }
 
-            calculerDemiTour(animal);
+            if (!TypeCase.isArrow(typeCase)) {
+                calculerDemiTour(animal);
+
+            }
 
             TypeCase futureCase = getFutureCase(animal);
 
@@ -85,13 +88,22 @@ public class Model extends AbstractModel {
                 animal.setyDir(0);
             }
 
-            animal.move();
+            if (canMove(animal)) {
+                animal.move();
+
+            }
         }
 
         calculerSiFaireEntrerSouris();
 
         animauxTues.forEach(this::tuerAnimal);
         souriesSorties.forEach(this::sortirSouris);
+    }
+
+    private boolean canMove(Animal animal) {
+        List<Animal> animauxDansFutureCase = getAnimauxDansCase(animal.getX() + animal.getxDir(), animal.getY() + animal.getyDir());
+
+        return animauxDansFutureCase.isEmpty();
     }
 
     public TypeCase getFutureCase(Animal animal) {
