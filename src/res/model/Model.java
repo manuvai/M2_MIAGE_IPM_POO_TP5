@@ -81,13 +81,6 @@ public class Model extends AbstractModel {
 
             }
 
-            TypeCase futureCase = getFutureCase(animal);
-
-            if (TypeCase.MUR.equals(futureCase)) {
-                animal.setxDir(0);
-                animal.setyDir(0);
-            }
-
             if (canMove(animal)) {
                 animal.move();
 
@@ -103,7 +96,8 @@ public class Model extends AbstractModel {
     private boolean canMove(Animal animal) {
         List<Animal> animauxDansFutureCase = getAnimauxDansCase(animal.getX() + animal.getxDir(), animal.getY() + animal.getyDir());
 
-        return animauxDansFutureCase.isEmpty();
+        TypeCase futureCase = getFutureCase(animal);
+        return animauxDansFutureCase.isEmpty() && !TypeCase.MUR.equals(futureCase);
     }
 
     public TypeCase getFutureCase(Animal animal) {
