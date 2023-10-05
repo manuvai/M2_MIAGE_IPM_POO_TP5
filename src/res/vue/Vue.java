@@ -104,7 +104,7 @@ public class Vue extends javax.swing.JFrame implements Observateur {
                 Animal animalPlusFort = model.getAnimalPlusFort(xP, yP);
 
                 if (animalPlusFort instanceof Souris) {
-                    panelJeu.drawSouris(xCase, yCase, cote);
+                    panelJeu.drawSouris(animalPlusFort, rectangle);
 
                 } else if (animalPlusFort instanceof Chat) {
                     panelJeu.drawChat(xCase, yCase, cote);

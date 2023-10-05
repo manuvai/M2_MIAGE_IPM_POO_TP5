@@ -5,6 +5,8 @@
  */
 package res.vue;
 
+import res.model.animal.Animal;
+
 import java.awt.*;
 import java.util.Objects;
 
@@ -87,5 +89,28 @@ public class PanelJeu extends javax.swing.JPanel {
     public void drawCaseFlecheDroite(int x, int y, int cote) {
         this.drawCaseChemin(x, y, cote);
         cg.drawImage(RessourcesImages.FLECHE, x, y, cote, cote, this);
+    }
+
+    public void drawSouris(Animal animal, Rectangle rectangleJeu) {
+        Image imageSouris = RessourcesImages.SOURIS;
+
+        int posX = animal.getX() * (int) rectangleJeu.getWidth() + rectangleJeu.x;
+        int posY = animal.getY() * (int) rectangleJeu.getWidth() + rectangleJeu.y;
+
+        cg.drawImage(imageSouris,
+                posX,
+                posY,
+                (int) rectangleJeu.getWidth(),
+                (int) rectangleJeu.getWidth(),
+                this);
+
+        String text = animal.toString().substring("res.model.animal.Souris".length());
+
+        Font font = new Font("Arial", Font.BOLD, 18);
+
+        cg.setFont(font);
+        cg.setColor(Color.GREEN);
+        cg.drawString(text, posX, posY);
+
     }
 }
