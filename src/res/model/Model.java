@@ -182,10 +182,20 @@ public class Model extends AbstractModel {
         return getNbSourisIn() == 0 && recupererNbSourisBougeant() == 0;
     }
     private boolean canMove(Animal animal) {
-        List<Animal> animauxDansFutureCase = getAnimauxDansCase(animal.getX() + animal.getxDir(), animal.getY() + animal.getyDir());
+        boolean canMove = false;
 
-        TypeCase futureCase = getFutureCase(animal);
-        return animauxDansFutureCase.isEmpty() && !TypeCase.MUR.equals(futureCase);
+        if (Objects.nonNull(animal)) {
+            List<Animal> animauxDansFutureCase = getAnimauxDansCase(animal.getX() + animal.getxDir(),
+                    animal.getY() + animal.getyDir());
+
+            TypeCase futureCase = getFutureCase(animal);
+            canMove = !TypeCase.MUR.equals(futureCase) &&
+                    animauxDansFutureCase.stream()
+                            .noneMatch(a -> a.getClass().equals(animal.getClass()));
+
+        }
+
+        return canMove;
     }
     private void calculerDemiTour(Animal animal) {
         if (Objects.nonNull(animal)) {
