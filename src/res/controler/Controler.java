@@ -30,26 +30,24 @@ public class Controler extends AbstractControler {
 
         boolean isChemin = TypeCase.CHEMIN.equals(typeCase);
 
-        if (isChemin &&
-                model.getNbFlecheUtilisee() >= model.getNbFlecheMax()
+        if (!isChemin ||
+                model.getNbFlecheUtilisee() < model.getNbFlecheMax()
         ) {
-            return;
+            boolean isLeftArrow = TypeCase.FLECHE_GAUCHE.equals(typeCase);
+            boolean isUpArrow = TypeCase.FLECHE_HAUT.equals(typeCase);
+            boolean isRightArrow = TypeCase.FLECHE_DROITE.equals(typeCase);
+            boolean isDownArrow = TypeCase.FLECHE_BAS.equals(typeCase);
+
+            boolean isArrow = isLeftArrow || isUpArrow || isRightArrow || isDownArrow;
+
+            if (isChemin || isArrow) {
+
+                TypeCase nextTypeCase = getNextTypeCase(typeCase);
+
+                model.setTypeCase(x, y, nextTypeCase);
+            }
         }
 
-        boolean isLeftArrow = TypeCase.FLECHE_GAUCHE.equals(typeCase);
-        boolean isUpArrow = TypeCase.FLECHE_HAUT.equals(typeCase);
-        boolean isRightArrow = TypeCase.FLECHE_DROITE.equals(typeCase);
-        boolean isDownArrow = TypeCase.FLECHE_BAS.equals(typeCase);
-
-        boolean isArrow = isLeftArrow || isUpArrow || isRightArrow || isDownArrow;
-
-        if (!isChemin && !isArrow) {
-            return;
-        }
-
-        TypeCase nextTypeCase = getNextTypeCase(typeCase);
-
-        model.setTypeCase(x, y, nextTypeCase);
     }
 
     @Override

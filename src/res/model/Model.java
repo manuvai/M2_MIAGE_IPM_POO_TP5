@@ -138,11 +138,10 @@ public class Model extends AbstractModel {
     }
 
     public void faireEntrerNouvelleSouris() {
-        if (sourisDansTrou.isEmpty()) {
-            return;
+        if (!sourisDansTrou.isEmpty()) {
+            ajouterSourisDansMap(sourisDansTrou.remove(0));
         }
 
-        ajouterSourisDansMap(sourisDansTrou.remove(0));
     }
 
     @Override
@@ -279,19 +278,18 @@ public class Model extends AbstractModel {
     }
 
     private void setAnimaux(List<Animal> inAnimaux) {
-        if (Objects.isNull(inAnimaux)) {
-            return;
+        if (Objects.nonNull(inAnimaux)) {
+            animaux = inAnimaux;
         }
 
-        animaux = inAnimaux;
     }
 
     private void ajouterSourisDansMap(Souris souris) {
-        if (Objects.isNull(souris)) {
-            return;
+        if (Objects.nonNull(souris)) {
+            animaux.add(souris);
+
         }
 
-        animaux.add(souris);
     }
 
     private void sortirSouris(Souris souris) {

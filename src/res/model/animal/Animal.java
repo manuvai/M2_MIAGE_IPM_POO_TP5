@@ -1,7 +1,5 @@
 package res.model.animal;
 
-import res.vue.observer.Observateur;
-
 public class Animal {
     protected int x;
     protected int y;
