@@ -67,6 +67,57 @@ public class Model extends AbstractModel {
     }
 
     /**
+     * Cette méthode permet de récupérer la future classe d'un animal
+     *
+     * @param animal
+     * @return
+     */
+    public TypeCase getFutureCase(Animal animal) {
+        return Objects.isNull(animal)
+                ? null
+                : getTypeCase(animal.getX() + animal.getxDir(), animal.getY() + animal.getyDir());
+    }
+
+    /**
+     * Permet de récupérer l'animal le plus fort d'une liste donnée en paramètre
+     *
+     * @param animaux
+     * @return
+     */
+    public Animal getAnimalPlusFort(List<Animal> animaux) {
+        int indexBest = -1;
+
+        if (Objects.nonNull(animaux)) {
+            for (int i = 0; i < animaux.size(); i++) {
+                if (indexBest == -1 || animaux.get(i) instanceof Chat) {
+                    indexBest = i;
+                }
+            }
+        }
+
+        return Objects.isNull(animaux)
+                ? null
+                : animaux.get(indexBest);
+    }
+
+    /**
+     * Permet de récupérer l'animal le plus fort dans une case
+     *
+     * @param x
+     * @param y
+     * @return
+     */
+    @Override
+    public Animal getAnimalPlusFort(int x, int y) {
+
+        List<Animal> animauxDansCase = getAnimauxDansCase(x, y);
+
+        return animauxDansCase.isEmpty()
+                ? null
+                : getAnimalPlusFort(animauxDansCase);
+    }
+
+    /**
      * Cette méthode permet de déplacer les animaux
      *
      */
@@ -109,18 +160,6 @@ public class Model extends AbstractModel {
     }
 
     /**
-     * Cette méthode permet de récupérer la future classe d'un animal
-     *
-     * @param animal
-     * @return
-     */
-    public TypeCase getFutureCase(Animal animal) {
-        return Objects.isNull(animal)
-                ? null
-                : getTypeCase(animal.getX() + animal.getxDir(), animal.getY() + animal.getyDir());
-    }
-
-    /**
      * Permet de récupérer le type d'une case
      *
      * @param x
@@ -143,45 +182,6 @@ public class Model extends AbstractModel {
     @Override
     public void setTypeCase(int x, int y, TypeCase tc) {
         carte.setTypeCase(x, y, tc);
-    }
-
-    /**
-     * Permet de récupérer l'animal le plus fort dans une case
-     *
-     * @param x
-     * @param y
-     * @return
-     */
-    @Override
-    public Animal getAnimalPlusFort(int x, int y) {
-
-        List<Animal> animauxDansCase = getAnimauxDansCase(x, y);
-
-        return animauxDansCase.isEmpty()
-                ? null
-                : getAnimalPlusFort(animauxDansCase);
-    }
-
-    /**
-     * Permet de récupérer l'animal le plus fort d'une liste donnée en paramètre
-     *
-     * @param animaux
-     * @return
-     */
-    public Animal getAnimalPlusFort(List<Animal> animaux) {
-        int indexBest = -1;
-
-        if (Objects.nonNull(animaux)) {
-            for (int i = 0; i < animaux.size(); i++) {
-                if (indexBest == -1 || animaux.get(i) instanceof Chat) {
-                    indexBest = i;
-                }
-            }
-        }
-
-        return Objects.isNull(animaux)
-                ? null
-                : animaux.get(indexBest);
     }
 
     @Override
