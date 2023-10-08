@@ -17,7 +17,7 @@ import res.vue.observer.Observateur;
 public abstract class AbstractModel implements Observable {
     private ArrayList<Observateur> observateurs;
 
-    public AbstractModel() {
+    protected AbstractModel() {
         observateurs = new ArrayList<>();
     }
 

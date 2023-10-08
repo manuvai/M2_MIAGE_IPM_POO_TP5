@@ -1,7 +1,6 @@
 package res.controler;
 
 import res.model.AbstractModel;
-import res.model.Model;
 import res.model.TypeCase;
 import res.model.exceptions.ThreadConcurrentException;
 
@@ -11,7 +10,6 @@ import java.util.stream.Stream;
 
 public class Controler extends AbstractControler {
     private static final long PERIOD = 512_000_000L; //ms -> nano // sleeping time
-    private static final int DELAYS_BEFORE_YIELD = 10;
     public Controler(AbstractModel model) {
         super(model);
     }
@@ -50,7 +48,6 @@ public class Controler extends AbstractControler {
         long diff;
         long sleepTime;
         long overSleepTime = 0;
-        int delays = 0;
 
         beforeTime =  System.nanoTime();
 
@@ -65,13 +62,9 @@ public class Controler extends AbstractControler {
         if ( sleepTime < PERIOD && sleepTime > 0){
             try {
                 Thread.sleep(sleepTime / 1_000_000L);
-            } catch (InterruptedException ex) {
+            } catch (Exception ex) {
                 throw new ThreadConcurrentException();
             }
-        }
-        // Accumulate the amount of delays and eventually yeild
-        else if(diff < PERIOD && ++delays >= DELAYS_BEFORE_YIELD){
-            Thread.yield();
         }
     }
 

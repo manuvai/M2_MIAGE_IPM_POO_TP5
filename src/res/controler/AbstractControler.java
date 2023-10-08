@@ -13,7 +13,7 @@ import res.model.AbstractModel;
 public abstract class AbstractControler {
     protected AbstractModel model;
 
-    public AbstractControler(AbstractModel model) {
+    protected AbstractControler(AbstractModel model) {
         this.model = model;
     }
 
