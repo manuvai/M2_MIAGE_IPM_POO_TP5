@@ -148,6 +148,10 @@ public class Model extends AbstractModel {
                     animal.move();
 
                 }
+                if (verifierSiMourir(animal)) {
+                    animauxTues.add(animal);
+
+                }
 
             }
         }
