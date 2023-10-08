@@ -9,9 +9,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Controler extends AbstractControler {
-    public static final int FRAMES_PER_SECOND = 1;
-    public static final long SKIP_TICKS = 1_000 / FRAMES_PER_SECOND;
-
+    private static final long PERIOD = 512_000_000L; //ms -> nano // sleeping time
     public Controler(AbstractModel model) {
         super(model);
     }
@@ -38,25 +36,32 @@ public class Controler extends AbstractControler {
 
     @Override
     public void calculerStepSuivant() {
-        long sleepPeriod;
-        long nextUpdateTick = System.currentTimeMillis();
+        long beforeTime;
+        long afterTime;
+        long diff;
+        long sleepTime;
+        long overSleepTime = 0;
+
+        beforeTime =  System.nanoTime();
 
         model.faireSeDeplacerLesAnimaux();
         model.demandeMiseAjourVue();
 
-        nextUpdateTick += SKIP_TICKS;
-        sleepPeriod = nextUpdateTick - System.currentTimeMillis();
+        afterTime = System.nanoTime();
+        diff = afterTime - beforeTime;
+        sleepTime = (PERIOD - diff) - overSleepTime;
 
-        if (sleepPeriod >= 0) {
+        // If the sleep time is between 0 and the period, we can happily sleep
+        if ( sleepTime < PERIOD && sleepTime > 0){
             try {
-                Thread.sleep(sleepPeriod);
-            } catch (InterruptedException e) {
+                Thread.sleep(sleepTime / 1_000_000L);
+            } catch (Exception ex) {
                 throw new ThreadConcurrentException();
             }
         }
     }
 
-    private TypeCase getNextTypeCase(TypeCase typeCase) {
+    private static TypeCase getNextTypeCase(TypeCase typeCase) {
         List<TypeCase> typeCaseList = Stream.of(TypeCase.FLECHE_HAUT, TypeCase.FLECHE_DROITE,
                         TypeCase.FLECHE_BAS, TypeCase.FLECHE_GAUCHE, TypeCase.CHEMIN)
                 .collect(Collectors.toList());
