@@ -24,14 +24,7 @@ public class Controler extends AbstractControler {
         if (!isChemin ||
                 model.getNbFlecheUtilisee() < model.getNbFlecheMax()
         ) {
-            boolean isLeftArrow = TypeCase.FLECHE_GAUCHE.equals(typeCase);
-            boolean isUpArrow = TypeCase.FLECHE_HAUT.equals(typeCase);
-            boolean isRightArrow = TypeCase.FLECHE_DROITE.equals(typeCase);
-            boolean isDownArrow = TypeCase.FLECHE_BAS.equals(typeCase);
-
-            boolean isArrow = isLeftArrow || isUpArrow || isRightArrow || isDownArrow;
-
-            if (isChemin || isArrow) {
+            if (isChemin || TypeCase.isArrow(typeCase)) {
 
                 TypeCase nextTypeCase = getNextTypeCase(typeCase);
 
