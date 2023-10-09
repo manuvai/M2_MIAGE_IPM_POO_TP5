@@ -334,6 +334,12 @@ public class Model extends AbstractModel {
         }
     }
 
+    /**
+     * Détermine la meilleure échapatoire pour un animal
+     *
+     * @param animal
+     * @return
+     */
     private Case chercherMeilleureEchapatoire(Animal animal) {
         Case meilleureEchapatoire = null;
 
@@ -375,6 +381,13 @@ public class Model extends AbstractModel {
         return meilleureEchapatoire;
     }
 
+    /**
+     * Détermine si un animal peut se rendre sur une case donnée
+     *
+     * @param animal
+     * @param desiredCase
+     * @return
+     */
     private boolean canGoTo(Animal animal, Case desiredCase) {
         boolean canGoTo = false;
 
@@ -390,6 +403,12 @@ public class Model extends AbstractModel {
         return canGoTo;
     }
 
+    /**
+     * Récupère la case juste derrière un animal
+     *
+     * @param animal
+     * @return
+     */
     private Case rechercherBehindCase(Animal animal) {
         Case behindCase = null;
 
@@ -414,6 +433,11 @@ public class Model extends AbstractModel {
         return behindCase;
     }
 
+    /**
+     * Récupère la case à la gauche d'un animal (selon sa direction)
+     * @param animal
+     * @return
+     */
     private Case rechercherNextLeftCase(Animal animal) {
         Case leftCase = null;
 
@@ -439,6 +463,11 @@ public class Model extends AbstractModel {
         return leftCase;
     }
 
+    /**
+     * Récupère la case à la droite d'un animal (selon sa direction)
+     * @param animal
+     * @return
+     */
     private Case rechercherNextRightCase(Animal animal) {
         Case rightCase = null;
 
@@ -464,6 +493,12 @@ public class Model extends AbstractModel {
         return rightCase;
     }
 
+    /**
+     * Récupère la future case d'un animal
+     *
+     * @param animal
+     * @return
+     */
     private Case rechercherFutureCase(Animal animal) {
 
         return Objects.isNull(animal)
@@ -471,6 +506,13 @@ public class Model extends AbstractModel {
                 : getCase(animal.getX() + animal.getxDir(), animal.getY() + animal.getyDir());
     }
 
+    /**
+     * Récupère une case donnée en fonction de ses coordonnées
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     private Case getCase(int x, int y) {
         return carte.getCase(x, y);
     }
@@ -488,6 +530,12 @@ public class Model extends AbstractModel {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Récupère la liste des animaux dans une case donnée
+     *
+     * @param desiredCase
+     * @return
+     */
     private List<Animal> getAnimauxDansCase(Case desiredCase) {
         return Objects.isNull(desiredCase)
                 ? new ArrayList<>()
