@@ -5,6 +5,7 @@ import res.model.animal.Chat;
 import res.model.animal.Souris;
 import res.model.exceptions.NoEntryFoundException;
 import res.model.map.Carte;
+import res.model.map.Case;
 import res.model.map.MapLoader;
 
 import java.awt.*;
@@ -135,7 +136,7 @@ public class Model extends AbstractModel {
             } else {
                 TypeCase typeCase = getTypeCase(animal.getX(), animal.getY());
                 if (animal instanceof Souris) {
-                    calculeDirectionAnimal(animal, typeCase);
+                    calculerDirectionAnimal(animal, typeCase);
 
                     if (TypeCase.OUT.equals(typeCase)) {
                         souriesSorties.add((Souris) animal);
@@ -235,13 +236,11 @@ public class Model extends AbstractModel {
         boolean canMove = false;
 
         if (Objects.nonNull(animal)) {
-            List<Animal> animauxDansFutureCase = getAnimauxDansCase(animal.getX() + animal.getxDir(),
+
+            Case futureCase = getCase(animal.getX() + animal.getxDir(),
                     animal.getY() + animal.getyDir());
 
-            TypeCase futureCase = getFutureCase(animal);
-            canMove = !TypeCase.MUR.equals(futureCase) &&
-                    animauxDansFutureCase.stream()
-                            .noneMatch(a -> a.getClass().equals(animal.getClass()));
+            canMove = canGoTo(animal, futureCase);
 
         }
 
@@ -290,7 +289,7 @@ public class Model extends AbstractModel {
      * @param animal
      * @param typeCase
      */
-    private void calculeDirectionAnimal(Animal animal, TypeCase typeCase) {
+    private void calculerDirectionAnimal(Animal animal, TypeCase typeCase) {
         if (Objects.nonNull(animal) && Objects.nonNull(typeCase)) {
 
             if (TypeCase.FLECHE_HAUT.equals(typeCase)) {
@@ -320,16 +319,160 @@ public class Model extends AbstractModel {
      * Détermine le prochain déplacement de l'animal
      *
      * @param animal
-     * @param typeCase
+     * @param actualTypeCase
      */
-    private void calculerFuturDeplacementAnimal(Animal animal, TypeCase typeCase) {
+    private void calculerFuturDeplacementAnimal(Animal animal, TypeCase actualTypeCase) {
         if (Objects.nonNull(animal) &&
-                Objects.nonNull(typeCase) &&
-                !TypeCase.isArrow(typeCase)
+                Objects.nonNull(actualTypeCase) &&
+                !TypeCase.isArrow(actualTypeCase)
         ) {
+            Case meilleureEchapatoire = chercherMeilleureEchapatoire(animal);
+            animal.goToCase(meilleureEchapatoire);
+
             calculerDemiTour(animal);
 
         }
+    }
+
+    private Case chercherMeilleureEchapatoire(Animal animal) {
+        Case meilleureEchapatoire = null;
+
+        if (Objects.nonNull(animal)) {
+
+            meilleureEchapatoire = rechercherFutureCase(animal);
+
+            if (
+                    Objects.nonNull(meilleureEchapatoire) &&
+                    TypeCase.MUR.equals(meilleureEchapatoire.getTypeCase())
+            ) {
+
+                Case nextRightCase = rechercherNextRightCase(animal);
+                Case nextLeftCase = rechercherNextLeftCase(animal);
+                Case behindCase = rechercherBehindCase(animal);
+
+                if (Objects.nonNull(behindCase) &&
+                        canGoTo(animal, behindCase)
+                ) {
+                    meilleureEchapatoire = behindCase;
+
+                } else if (Objects.nonNull(nextRightCase) &&
+                        canGoTo(animal, nextRightCase)
+                ) {
+                    meilleureEchapatoire = nextRightCase;
+
+                } else if (Objects.nonNull(nextLeftCase) &&
+                        canGoTo(animal, nextLeftCase)
+                ) {
+                    meilleureEchapatoire = nextLeftCase;
+
+                }
+
+            }
+
+
+        }
+
+        return meilleureEchapatoire;
+    }
+
+    private boolean canGoTo(Animal animal, Case desiredCase) {
+        boolean canGoTo = false;
+
+        if (Objects.nonNull(animal) && Objects.nonNull(desiredCase)) {
+
+            List<Animal> animauxDansCase = getAnimauxDansCase(desiredCase);
+
+            canGoTo = !TypeCase.MUR.equals(desiredCase.getTypeCase()) &&
+                animauxDansCase.stream()
+                        .noneMatch(animalStream -> animal.getClass().equals(animalStream.getClass()));
+        }
+
+        return canGoTo;
+    }
+
+    private Case rechercherBehindCase(Animal animal) {
+        Case behindCase = null;
+
+        if (Objects.nonNull(animal)) {
+            Animal.Direction direction = animal.getDirection();
+
+            if (Animal.Direction.RIGHT.equals(direction)) {
+                behindCase = carte.getCase(animal.getX() - 1, animal.getY());
+
+            } else if (Animal.Direction.LEFT.equals(direction)) {
+                behindCase = carte.getCase(animal.getX() + 1, animal.getY());
+
+            } else if (Animal.Direction.UP.equals(direction)) {
+                behindCase = carte.getCase(animal.getX(), animal.getY() + 1);
+
+            } else if (Animal.Direction.DOWN.equals(direction)) {
+                behindCase = carte.getCase(animal.getX(), animal.getY() - 1);
+
+            }
+        }
+
+        return behindCase;
+    }
+
+    private Case rechercherNextLeftCase(Animal animal) {
+        Case leftCase = null;
+
+        if (Objects.nonNull(animal)) {
+            Animal.Direction direction = animal.getDirection();
+
+            if (Animal.Direction.RIGHT.equals(direction)) {
+                leftCase = carte.getCase(animal.getX(), animal.getY() - 1);
+
+            } else if (Animal.Direction.LEFT.equals(direction)) {
+                    leftCase = carte.getCase(animal.getX(), animal.getY() + 1);
+
+            } else if (Animal.Direction.UP.equals(direction)) {
+                leftCase = carte.getCase(animal.getX() - 1, animal.getY());
+
+            } else if (Animal.Direction.DOWN.equals(direction)) {
+                leftCase = carte.getCase(animal.getX() + 1, animal.getY());
+
+            }
+
+        }
+
+        return leftCase;
+    }
+
+    private Case rechercherNextRightCase(Animal animal) {
+        Case rightCase = null;
+
+        if (Objects.nonNull(animal)) {
+            Animal.Direction direction = animal.getDirection();
+
+            if (Animal.Direction.RIGHT.equals(direction)) {
+                    rightCase = carte.getCase(animal.getX(), animal.getY() + 1);
+
+            } else if (Animal.Direction.LEFT.equals(direction)) {
+                rightCase = carte.getCase(animal.getX(), animal.getY() - 1);
+
+            } else if (Animal.Direction.UP.equals(direction)) {
+                rightCase = carte.getCase(animal.getX() + 1, animal.getY());
+
+            } else if (Animal.Direction.DOWN.equals(direction)) {
+                rightCase = carte.getCase(animal.getX() - 1, animal.getY());
+
+            }
+
+        }
+
+        return rightCase;
+    }
+
+    private Case rechercherFutureCase(Animal animal) {
+
+        return Objects.isNull(animal)
+                ? null
+                : getCase(animal.getX() + animal.getxDir(), animal.getY() + animal.getyDir());
+    }
+
+    private Case getCase(int x, int y) {
+        return carte.getCase(x, y);
     }
 
     /**
@@ -343,6 +486,12 @@ public class Model extends AbstractModel {
         return animaux.stream()
                 .filter(animal -> animal.getX() == x && animal.getY() == y)
                 .collect(Collectors.toList());
+    }
+
+    private List<Animal> getAnimauxDansCase(Case desiredCase) {
+        return Objects.isNull(desiredCase)
+                ? new ArrayList<>()
+                : getAnimauxDansCase(desiredCase.getX(), desiredCase.getY());
     }
 
     /**

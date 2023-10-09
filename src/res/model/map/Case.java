@@ -16,6 +16,14 @@ public class Case {
         this.typeCase = typeCase;
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
     public TypeCase getTypeCase() {
         return typeCase;
     }

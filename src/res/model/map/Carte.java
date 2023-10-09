@@ -17,11 +17,19 @@ public class Carte {
     }
 
     public TypeCase getTypeCase(int x, int y) {
+        Case targetedCase = getCase(x, y);
+
+        return Objects.isNull(targetedCase)
+                ? null
+                : targetedCase.getTypeCase();
+    }
+
+    public Case getCase(int x, int y) {
         Ligne ligneCase = lignes.get(x);
 
         return Objects.isNull(ligneCase)
                 ? null
-                : ligneCase.get(y).getTypeCase();
+                : ligneCase.get(y);
     }
 
     public int getLargeur() {
