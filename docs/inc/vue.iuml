@@ -1,0 +1,74 @@
+
+!includeurl https://raw.githubusercontent.com/manuvai/plantuml-utils/master/class_diagram_utils.puml
+
+package vue {
+
+    package observer {
+        interface Observateur <<initial>> {
+            +{abstract} void("update()")
+        }
+
+        interface Observable <<initial>> {
+            +{abstract} void("addObservateur(Observateur)")
+            +{abstract} void("removeObservateur(Observateur)")
+            +{abstract} void("demandeMiseAjourVue()")
+
+        }
+
+    }
+    
+    class MouseListener <<extends MouseAdapter>> <<initial>> {
+        int(x0)
+        int(y0)
+        int(x1)
+        int(y1)
+        int(cote)
+        int(xDepart)
+        int(yDepart)
+        int(xArrive)
+        int(yArrive)
+        boolean(deuxiemeClic)
+
+        +construct("MouseListener(AbstractControler)")
+        +void("mousePressed(MouseEvent)")
+        +void("updateDimension(int, int, int, int, int)")
+        +boolean("alinterieur(int, int)")
+        +int("numeroCaseColonne(int)")
+        +int("numeroCaseLigne(int)")
+    }
+
+    class PanelJeu <<extends javax.swing.JPanel>> <<initial>> {
+        -member(Graphics, cg)
+
+        +construct("PanelJeu()")
+        +construct("PanelJeu(Vue)")
+        +void("paintComponent(Graphics)")
+        +void("drawSouris(int, int, int)")
+        +void("drawChat(int, int, int)")
+        +void("drawCaseIn(int, int, int)")
+        +void("drawCaseOut(int, int, int)")
+        +void("drawCaseMur(int, int, int)")
+        +void("drawCaseChemin(int, int, int)")
+        +void("drawCaseFlecheHaut(int, int, int)")
+        +void("drawCaseFlecheBas(int, int, int)")
+        +void("drawCaseFlecheGauche(int, int, int)")
+        +void("drawCaseFlecheDroite(int, int, int)")
+    }
+
+    class RessourcesImages <<initial>> {
+        +{static} member(Image, CHAT)
+        +{static} member(Image, SOURIS)
+        +{static} member(Image, FLECHE)
+        +{static} member(Image, CHEMIN)
+        +{static} member(Image, MUR)
+        +{static} member(Image, IN)
+        +{static} member(Image, OUT)
+        -construct("RessourcesImages()")
+    }
+
+    class Vue <<initial>> {
+        +construct("Vue(AbstractModel, AbstractControler)")
+        +void("dessinerJeu()")
+        -member(Rectangle, "initialiserRectangleJeu()")
+    }
+}

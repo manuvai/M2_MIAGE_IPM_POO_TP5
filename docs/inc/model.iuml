@@ -1,0 +1,207 @@
+!includeurl https://raw.githubusercontent.com/manuvai/plantuml-utils/master/class_diagram_utils.puml
+
+package model {
+
+    package animal {
+
+        class Animal implements Observateur {
+            #int(x)
+            #int(y)
+            #int(xDir)
+            #int(yDir)
+
+            +construct("Animal(int, int)")
+            +int("getX()")
+            +void("setX(int)")
+            +int("getY()")
+            +void("setY(int)")
+            +int("getxDir()")
+            +void("setxDir(int)")
+            +int("getyDir()")
+            +void("setyDir(int)")
+            +void("move()")
+            +void("goToCase(Case)")
+            +member(Direction, "getDirection()")
+        }
+
+        enum Animal.Direction {
+            RIGHT
+            LEFT
+            UP
+            DOWN
+            IDLE
+        }
+
+        class Souris {
+            +construct("Souris(int, int)")
+        }
+
+        class Chat {
+            +construct("Chat(int, int)")
+        }
+        
+    }
+
+    package exceptions {
+        exception NoStackTraceRuntimeException {
+            +construct("NoStackTraceRuntimeException(String)")
+            +member(Throwable, "fillInStackTrace()")
+        }
+        exception AnimalCreationFailedException {
+            +construct("AnimalCreationFailedException()")
+        }
+        exception ImpossibleToExtractLinesException {
+            +construct("ImpossibleToExtractLinesException()")
+        }
+        exception InvalidEntryException {
+            +construct("InvalidEntryException()")
+        }
+        exception NoEntryFoundException {
+            +construct("NoEntryFoundException()")
+        }
+        exception ThreadConcurrentException {
+            +construct("ThreadConcurrentException()")
+        }
+    }
+
+    package map {
+        interface AnimalTypeString {
+            string(CHAT)
+            string(SOURIS)
+        }
+
+        interface MapTileTypeString {
+            string(IN)
+            string(OUT)
+            string(MUR)
+            string(CHEMIN)
+            string(FLECHE_HAUT)
+            string(FLECHE_DROITE)
+            string(FLECHE_BAS)
+            string(FLECHE_GAUCHE)
+        }
+
+        class Carte {
+            +void("setTypeCase(int, int, TypeCase tc)")
+            +member(TypeCase, "getTypeCase(int, int)")
+            +member(Case, "getCase(int, int)")
+            +int("getLargeur()")
+            +int("getHauteur()")
+            +int("getNbFlecheUtilisee()")
+            +member(Rectangle, "recupererPositionTrouEntree()")
+        }
+
+        class Case {
+            -int(x)
+            -int(y)
+
+            +construct("Case(int, int, TypeCase)")
+            +int("getX()")
+            +int("getY()")
+            +member(TypeCase, "getTypeCase()")
+            +void("setTypeCase(TypeCase)")
+
+        }
+
+        class Ligne {
+            +member(Case, "get(Integer)")
+            +int("size()")
+            +member("Collection<Case>", "values()")
+            +member("Set<Map.Entry<Integer, Case>>", "entrySet()")
+            +void("setTypeCase(int, int, TypeCase)")
+        }
+
+        class MapAdapter {
+            -member("Map<String, TypeCase>", correspondingMapTile)
+            -member("Map<String, Class<? extends Animal>>", correspondingAnimal)
+            -{static} member(MapAdapter, instance)
+
+            #construct("MapAdapter()")
+            +member("Class<? extends Animal>", "toAnimal(String)")
+            +member("TypeCase", "toMapTile(String)")
+            +member(MapAdapter, "getInstance()")
+        }
+
+        class MapLoader {
+            +list("List<TypeCase>", "getMapTiles(String)")
+            +list("Animal", "getCharacters(String)")
+            -list("String", "extractMapString(String)")
+            -list("List<String>", "extractTileString(List<String>)")
+            -list("List<String>", "extractTileString(List<String>, String)")
+            -list("List<TypeCase>", "constructTilesFromString(List<List[String]>)")
+            -list("String", "readFromInputStream(InputStream)")
+        }
+    }
+
+    abstract AbstractModel <<initial>> {
+        +construct("AbstractModel()")
+        +{abstract} void("faireSeDeplacerLesAnimaux()")
+        +{abstract} member(TypeCase, "getTypeCase(int, int)")
+        +{abstract} member(Animal, "getTypeCase(int, int)")
+        +{abstract} int("getLargeur()")
+        +{abstract} int("getHauteur()")
+        +{abstract} int("getNbSourisIn()")
+        +{abstract} int("getNbSourisOut()")
+        +{abstract} int("getNbFlecheUtilisee()")
+        +{abstract} int("getNbFlecheMax()")
+        +{abstract} boolean("partieTerminer()")
+        +void("demandeMiseAjourVue()")
+        +void("removeObservateur(Observateur)")
+        +void("addObservateur(Observateur)")
+    }
+
+    class Model extends AbstractModel {
+        +void("initialiserAnimaux(String)")
+        +void("initialiserCarte(String)")
+        +member(TypeCase, "getFutureCase(Animal)")
+        +member(Animal, "getAnimalPlusFort(List<Animal>)")
+        -boolean("canMove(Animal)")
+        -void("calculerDemiTour(Animal)")
+        -void("faireEntrerNouvelleSouris()")
+        -void("calculerDirectionAnimal(Animal, TypeCase)")
+        -void("calculerFuturDeplacementAnimal(Animal, TypeCase)")
+        -list(Animal, "getAnimauxDansCase(int, int)")
+        -void("tuerAnimal(Animal)")
+        -int("recupererNbSourisBougeant()")
+        -boolean("verifierSiMourir(Animal)")
+        -void("calculerSiFaireEntrerSouris()")
+        -boolean("isPossibleToEnter()")
+        -void("inverserSens(Animal)")
+        -void("setAnimaux(List<Animal>)")
+        -void("ajouterSourisDansMap(Souris)")
+        -void("sortirSouris(Souris)")
+        -void("initialiserSourisDansTrous()")
+        -member(Rectangle, "recupererPositionTrouEntree()")
+    }
+
+    enum TypeCase <<initial>> {
+        MUR
+        IN
+        OUT
+        CHEMIN
+        FLECHE_HAUT
+        FLECHE_DROITE
+        FLECHE_BAS
+        FLECHE_GAUCHE
+        +{static} boolean("isArrow(Case)")
+        +{static} boolean("isArrow(TypeCase)")
+    }
+}
+
+extends(Chat, Animal, up)
+extends(Souris, Animal, up)
+
+AbstractModel o-- Observateur : list(Observateur, observateurs)
+
+
+Case *-- TypeCase
+Model -- Animal : list(Animal, animaux)
+
+AnimalCreationFailedException --|> NoStackTraceRuntimeException
+ImpossibleToExtractLinesException --|> NoStackTraceRuntimeException
+InvalidEntryException --|> NoStackTraceRuntimeException
+NoEntryFoundException --|> NoStackTraceRuntimeException
+ThreadConcurrentException --|> NoStackTraceRuntimeException
+
+Carte -- Ligne : member("Map<Integer, Ligne>", lignes)
+Ligne -- Case : member("Map<Integer, Case>", cases)

@@ -1,0 +1,17 @@
+!includeurl https://raw.githubusercontent.com/manuvai/plantuml-utils/master/class_diagram_utils.puml
+
+package controler {
+    abstract AbstractControler <<initial>> {
+        +construct("AbstractControler(AbstractModel)")
+        +{abstract} void("cliqueSur(int, int)")
+        +{abstract} void("calculerStepSuivant()")
+    }
+
+    class Controler extends AbstractControler {
+        -{static} member(long, PERIOD)
+        +construct("Controler(AbstractModel)")
+        +void("cliqueSur(int, int)")
+        +void("calculerStepSuivant()")
+        -{static} member(TypeCase, "getNextTypeCase(TypeCase)")
+    }
+}
