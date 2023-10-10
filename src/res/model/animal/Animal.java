@@ -54,31 +54,8 @@ public class Animal {
 
     public void goToCase(Case meilleureEchapatoire) {
         if (Objects.nonNull(meilleureEchapatoire)) {
-            boolean isRight = meilleureEchapatoire.getX() > getX();
-            boolean isLeft = meilleureEchapatoire.getX() < getX();
-
-            boolean isUp = meilleureEchapatoire.getY() < getY();
-            boolean isDown = meilleureEchapatoire.getY() > getY();
-
-            int nextXDir = 0;
-
-            if (isRight) {
-                nextXDir = 1;
-
-            } else if (isLeft) {
-                nextXDir = -1;
-
-            }
-
-            int nextYDir = 0;
-
-            if (isUp) {
-                nextXDir = -1;
-
-            } else if (isDown) {
-                nextXDir = 1;
-
-            }
+            int nextXDir = meilleureEchapatoire.getX() - getX();
+            int nextYDir = meilleureEchapatoire.getY() - getY();
 
             setxDir(nextXDir);
             setyDir(nextYDir);
