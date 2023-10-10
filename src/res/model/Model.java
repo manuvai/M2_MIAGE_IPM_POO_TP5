@@ -356,21 +356,31 @@ public class Model extends AbstractModel {
                 Case nextLeftCase = rechercherNextLeftCase(animal);
                 Case behindCase = rechercherBehindCase(animal);
 
-                if (Objects.nonNull(behindCase) &&
-                        canGoTo(animal, behindCase)
-                ) {
-                    meilleureEchapatoire = behindCase;
+                if (!(animal instanceof Souris)) {
+                    if (Objects.nonNull(behindCase) &&
+                            canGoTo(animal, behindCase)
+                    ) {
+                        meilleureEchapatoire = behindCase;
 
-                } else if (Objects.nonNull(nextRightCase) &&
-                        canGoTo(animal, nextRightCase)
-                ) {
-                    meilleureEchapatoire = nextRightCase;
+                    }
 
-                } else if (Objects.nonNull(nextLeftCase) &&
-                        canGoTo(animal, nextLeftCase)
-                ) {
-                    meilleureEchapatoire = nextLeftCase;
+                } else {
+                    if (Objects.nonNull(nextRightCase) &&
+                            canGoTo(animal, nextRightCase)
+                    ) {
+                        meilleureEchapatoire = nextRightCase;
 
+                    } else if (Objects.nonNull(behindCase) &&
+                            canGoTo(animal, behindCase)
+                    ) {
+                        meilleureEchapatoire = behindCase;
+
+                    } else if (Objects.nonNull(nextLeftCase) &&
+                            canGoTo(animal, nextLeftCase)
+                    ) {
+                        meilleureEchapatoire = nextLeftCase;
+
+                    }
                 }
 
             }
