@@ -26,5 +26,10 @@ Le chargement de la carte se fait à travers le fichier contenu dans `src\assets
 | FLECHE_GAUCHE | Flèche directionnelle vers la gauche | "v"        |
 
 ## Chargement des animaux
+Le chargement des animaux se fait à travers le fichier `src\assets\animals.csv`
+
 ## Déplacement des souris
+Les souris se déplacent dans le sens horaire selon la possiblité de se rendre dans la case.
+
 ## Timer pour la sortie des souris des trous
+Pour l'instant, les souris mettent 5 secondes pour pouvoir sortir. Mais il est possible de modifier ce paramètre en modifiant la valeur de `res.model.Model.DELAY_TO_ENTER`.
