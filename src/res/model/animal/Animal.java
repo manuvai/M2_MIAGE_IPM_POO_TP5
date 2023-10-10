@@ -5,6 +5,9 @@ import res.model.map.Case;
 import java.util.Objects;
 
 public class Animal {
+
+    protected static final int MAX_FORWARD = 1;
+    protected static final int MIN_BACKWARD = -1;
     protected int x;
     protected int y;
     protected int xDir;
@@ -36,6 +39,7 @@ public class Animal {
     }
 
     public void setxDir(int xDir) {
+        xDir = Math.max(MIN_BACKWARD, Math.min(MAX_FORWARD, xDir));
         this.xDir = xDir;
     }
 
@@ -44,6 +48,7 @@ public class Animal {
     }
 
     public void setyDir(int yDir) {
+        yDir = Math.max(MIN_BACKWARD, Math.min(MAX_FORWARD, yDir));
         this.yDir = yDir;
     }
 
