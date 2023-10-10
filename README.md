@@ -6,6 +6,10 @@ Prénom : Manuvai
 
 Lien vers le dépôt Github : https://github.com/manuvai/M2_MIAGE_IPM_POO_TP5
 
+# Aperçu
+
+![Le jeu du chat et de la souris](out/Chat_et_souris.png)
+
 # Diagramme de classes
 
 ![Diagramme de classe](out/docs/dce/dce.svg)
